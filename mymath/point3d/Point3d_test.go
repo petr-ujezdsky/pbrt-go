@@ -1,14 +1,15 @@
-package mymath_test
+package point3d_test
 
 import (
-	"pbrt-go/mymath"
+	"pbrt-go/mymath/point3d"
+	"pbrt-go/mymath/vector3d"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestConstructor(t *testing.T) {
-	p := mymath.NewPoint3d(1, 2, 3)
+	p := point3d.NewPoint3d(1, 2, 3)
 
 	assert.Equal(t, 1.0, p.X)
 	assert.Equal(t, 2.0, p.Y)
@@ -16,8 +17,8 @@ func TestConstructor(t *testing.T) {
 }
 
 func TestAddP(t *testing.T) {
-	p1 := mymath.NewPoint3d(1, 2, 3)
-	p2 := mymath.NewPoint3d(5, 6, 7)
+	p1 := point3d.NewPoint3d(1, 2, 3)
+	p2 := point3d.NewPoint3d(5, 6, 7)
 
 	res := p1.AddP(p2)
 
@@ -27,8 +28,8 @@ func TestAddP(t *testing.T) {
 }
 
 func TestAddV(t *testing.T) {
-	p := mymath.NewPoint3d(1, 2, 3)
-	v := mymath.NewVector3d(5, 6, 7)
+	p := point3d.NewPoint3d(1, 2, 3)
+	v := vector3d.NewVector3d(5, 6, 7)
 
 	res := p.AddV(v)
 
@@ -38,8 +39,8 @@ func TestAddV(t *testing.T) {
 }
 
 func TestSubtractP(t *testing.T) {
-	p1 := mymath.NewPoint3d(1, 2, 3)
-	p2 := mymath.NewPoint3d(5, 6, 7)
+	p1 := point3d.NewPoint3d(1, 2, 3)
+	p2 := point3d.NewPoint3d(5, 6, 7)
 
 	res := p1.SubtractP(p2)
 
@@ -49,8 +50,8 @@ func TestSubtractP(t *testing.T) {
 }
 
 func TestSubtractV(t *testing.T) {
-	p := mymath.NewPoint3d(1, 2, 3)
-	v := mymath.NewVector3d(5, 6, 7)
+	p := point3d.NewPoint3d(1, 2, 3)
+	v := vector3d.NewVector3d(5, 6, 7)
 
 	res := p.SubtractV(v)
 
@@ -60,7 +61,7 @@ func TestSubtractV(t *testing.T) {
 }
 
 func TestMultiply(t *testing.T) {
-	v := mymath.NewPoint3d(1, 2, 3)
+	v := point3d.NewPoint3d(1, 2, 3)
 
 	res := v.Multiply(5.0)
 
@@ -70,8 +71,8 @@ func TestMultiply(t *testing.T) {
 }
 
 func TestDistance(t *testing.T) {
-	p1 := mymath.NewPoint3d(1, 2, 3)
-	p2 := mymath.NewPoint3d(5, 6, 7)
+	p1 := point3d.NewPoint3d(1, 2, 3)
+	p2 := point3d.NewPoint3d(5, 6, 7)
 
 	res := p1.Distance(p2)
 
@@ -79,8 +80,8 @@ func TestDistance(t *testing.T) {
 }
 
 func TestDistanceSq(t *testing.T) {
-	p1 := mymath.NewPoint3d(1, 2, 3)
-	p2 := mymath.NewPoint3d(5, 6, 7)
+	p1 := point3d.NewPoint3d(1, 2, 3)
+	p2 := point3d.NewPoint3d(5, 6, 7)
 
 	res := p1.DistanceSq(p2)
 
@@ -88,9 +89,9 @@ func TestDistanceSq(t *testing.T) {
 }
 
 func TestLerp(t *testing.T) {
-	p := mymath.NewPoint3d(1, 2, 3)
+	p := point3d.NewPoint3d(1, 2, 3)
 
-	res := p.Lerp(0.5, mymath.NewPoint3d(5, 6, 7))
+	res := p.Lerp(0.5, point3d.NewPoint3d(5, 6, 7))
 
 	assert.Equal(t, 3.0, res.X)
 	assert.Equal(t, 4.0, res.Y)
@@ -98,8 +99,8 @@ func TestLerp(t *testing.T) {
 }
 
 func TestMin(t *testing.T) {
-	v := mymath.NewPoint3d(1, 8, 3)
-	w := mymath.NewPoint3d(4, 5, 6)
+	v := point3d.NewPoint3d(1, 8, 3)
+	w := point3d.NewPoint3d(4, 5, 6)
 
 	res := v.Min(w)
 
@@ -109,8 +110,8 @@ func TestMin(t *testing.T) {
 }
 
 func TestMax(t *testing.T) {
-	v := mymath.NewPoint3d(1, 8, 3)
-	w := mymath.NewPoint3d(4, 5, 6)
+	v := point3d.NewPoint3d(1, 8, 3)
+	w := point3d.NewPoint3d(4, 5, 6)
 
 	res := v.Max(w)
 
@@ -120,7 +121,7 @@ func TestMax(t *testing.T) {
 }
 
 func TestFloor(t *testing.T) {
-	v := mymath.NewPoint3d(1.8, 8.9, 3.1)
+	v := point3d.NewPoint3d(1.8, 8.9, 3.1)
 
 	res := v.Floor()
 
@@ -130,7 +131,7 @@ func TestFloor(t *testing.T) {
 }
 
 func TestCeil(t *testing.T) {
-	v := mymath.NewPoint3d(1.8, 8.9, 3.1)
+	v := point3d.NewPoint3d(1.8, 8.9, 3.1)
 
 	res := v.Ceil()
 
@@ -140,7 +141,7 @@ func TestCeil(t *testing.T) {
 }
 
 func TestAbs(t *testing.T) {
-	v := mymath.NewPoint3d(-1, -2, -3)
+	v := point3d.NewPoint3d(-1, -2, -3)
 
 	res := v.Abs()
 
@@ -150,7 +151,7 @@ func TestAbs(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	v := mymath.NewPoint3d(1, 2, 3)
+	v := point3d.NewPoint3d(1, 2, 3)
 
 	assert.Equal(t, 1.0, v.Get(0))
 	assert.Equal(t, 2.0, v.Get(1))
@@ -158,7 +159,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestPermute(t *testing.T) {
-	v := mymath.NewPoint3d(1, 8, 3)
+	v := point3d.NewPoint3d(1, 8, 3)
 
 	res := v.Permute(2, 0, 1)
 
