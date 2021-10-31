@@ -224,6 +224,16 @@ func TestBounds3MaximumExtent(t *testing.T) {
 			mymath.NewPoint3(1, 1, 5)).MaximumExtent())
 }
 
+func TestBounds3Lerp(t *testing.T) {
+	b := mymath.NewBounds3(
+		mymath.NewPoint3(1, 2, 3),
+		mymath.NewPoint3(5, 6, 7))
+
+	assert.Equal(t, mymath.NewPoint3(1, 2, 3), b.Lerp(mymath.NewPoint3(0, 0, 0)))
+	assert.Equal(t, mymath.NewPoint3(5, 6, 7), b.Lerp(mymath.NewPoint3(1, 1, 1)))
+	assert.Equal(t, mymath.NewPoint3(3, 4, 5), b.Lerp(mymath.NewPoint3(0.5, 0.5, 0.5)))
+}
+
 func TestBounds3Offset(t *testing.T) {
 	b := mymath.NewBounds3(
 		mymath.NewPoint3(1, 2, 3),
