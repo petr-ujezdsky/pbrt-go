@@ -181,7 +181,7 @@ func TestBounds3Diagonal(t *testing.T) {
 
 	res := b.Diagonal()
 
-	assert.Equal(t, mymath.NewVector3d(4, 4, 4), res)
+	assert.Equal(t, mymath.NewVector3(4, 4, 4), res)
 }
 
 func TestBounds3SurfaceArea(t *testing.T) {

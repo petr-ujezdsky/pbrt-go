@@ -82,14 +82,14 @@ func (b Bounds3d) InsideExclusive(p Point3) bool {
 }
 
 func (b Bounds3d) Expand(delta float64) Bounds3d {
-	vDelta := NewVector3d(delta, delta, delta)
+	vDelta := NewVector3(delta, delta, delta)
 
 	return NewBounds3d(
 		b.PMin.SubtractV(vDelta),
 		b.PMax.AddV(vDelta))
 }
 
-func (b Bounds3d) Diagonal() Vector3d {
+func (b Bounds3d) Diagonal() Vector3 {
 	return b.PMax.SubtractP(b.PMin)
 }
 

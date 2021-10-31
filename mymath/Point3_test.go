@@ -28,7 +28,7 @@ func TestPoint3AddP(t *testing.T) {
 
 func TestPoint3AddV(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
-	v := mymath.NewVector3d(5, 6, 7)
+	v := mymath.NewVector3(5, 6, 7)
 
 	res := p.AddV(v)
 
@@ -50,7 +50,7 @@ func TestPoint3SubtractP(t *testing.T) {
 
 func TestPoint3SubtractV(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
-	v := mymath.NewVector3d(5, 6, 7)
+	v := mymath.NewVector3(5, 6, 7)
 
 	res := p.SubtractV(v)
 

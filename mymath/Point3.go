@@ -16,15 +16,15 @@ func (p1 Point3) AddP(p2 Point3) Point3 {
 	return NewPoint3(p1.X+p2.X, p1.Y+p2.Y, p1.Z+p2.Z)
 }
 
-func (p Point3) AddV(v Vector3d) Point3 {
+func (p Point3) AddV(v Vector3) Point3 {
 	return NewPoint3(p.X+v.X, p.Y+v.Y, p.Z+v.Z)
 }
 
-func (p1 Point3) SubtractP(p2 Point3) Vector3d {
-	return NewVector3d(p1.X-p2.X, p1.Y-p2.Y, p1.Z-p2.Z)
+func (p1 Point3) SubtractP(p2 Point3) Vector3 {
+	return NewVector3(p1.X-p2.X, p1.Y-p2.Y, p1.Z-p2.Z)
 }
 
-func (p Point3) SubtractV(v Vector3d) Point3 {
+func (p Point3) SubtractV(v Vector3) Point3 {
 	return NewPoint3(p.X-v.X, p.Y-v.Y, p.Z-v.Z)
 }
 

@@ -7,7 +7,7 @@ import (
 
 func main() {
 	str := text()
-	v := mymath.NewVector3d(3, 4, 5)
+	v := mymath.NewVector3(3, 4, 5)
 	fmt.Println(str)
 	fmt.Println(v)
 	fmt.Println(v.LengthSq())

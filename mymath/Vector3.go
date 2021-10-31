@@ -2,67 +2,67 @@ package mymath
 
 import "math"
 
-type Vector3d struct {
+type Vector3 struct {
 	X, Y, Z float64
 }
 
-var EMPTY = NewVector3d(0, 0, 0)
+var EMPTY = NewVector3(0, 0, 0)
 
-func NewVector3d(x, y, z float64) Vector3d {
-	return Vector3d{x, y, z}
+func NewVector3(x, y, z float64) Vector3 {
+	return Vector3{x, y, z}
 }
 
-func (v Vector3d) LengthSq() float64 {
+func (v Vector3) LengthSq() float64 {
 	return v.X*v.X + v.Y*v.Y + v.Z*v.Z
 }
 
-func (v Vector3d) Length() float64 {
+func (v Vector3) Length() float64 {
 	return math.Sqrt(v.LengthSq())
 }
 
-func (v Vector3d) Add(w Vector3d) Vector3d {
-	return NewVector3d(v.X+w.X, v.Y+w.Y, v.Z+w.Z)
+func (v Vector3) Add(w Vector3) Vector3 {
+	return NewVector3(v.X+w.X, v.Y+w.Y, v.Z+w.Z)
 }
 
-func (v Vector3d) Subtract(w Vector3d) Vector3d {
-	return NewVector3d(v.X-w.X, v.Y-w.Y, v.Z-w.Z)
+func (v Vector3) Subtract(w Vector3) Vector3 {
+	return NewVector3(v.X-w.X, v.Y-w.Y, v.Z-w.Z)
 }
 
-func (v Vector3d) Multiply(d float64) Vector3d {
-	return NewVector3d(v.X*d, v.Y*d, v.Z*d)
+func (v Vector3) Multiply(d float64) Vector3 {
+	return NewVector3(v.X*d, v.Y*d, v.Z*d)
 }
 
-func (v Vector3d) Divide(d float64) Vector3d {
+func (v Vector3) Divide(d float64) Vector3 {
 	inv := 1 / d
 	return v.Multiply(inv)
 }
 
-func (v Vector3d) Negate() Vector3d {
-	return NewVector3d(-v.X, -v.Y, -v.Z)
+func (v Vector3) Negate() Vector3 {
+	return NewVector3(-v.X, -v.Y, -v.Z)
 }
 
-func (v Vector3d) Abs() Vector3d {
-	return NewVector3d(math.Abs(v.X), math.Abs(v.Y), math.Abs(v.Z))
+func (v Vector3) Abs() Vector3 {
+	return NewVector3(math.Abs(v.X), math.Abs(v.Y), math.Abs(v.Z))
 }
 
-func (v Vector3d) Normalize() Vector3d {
+func (v Vector3) Normalize() Vector3 {
 	lengthInv := 1 / v.Length()
 	return v.Multiply(lengthInv)
 }
 
-func (v Vector3d) Dot(w Vector3d) float64 {
+func (v Vector3) Dot(w Vector3) float64 {
 	return v.X*w.X + v.Y*w.Y + v.Z*w.Z
 }
 
-func (v Vector3d) Cross(w Vector3d) Vector3d {
+func (v Vector3) Cross(w Vector3) Vector3 {
 	// always use doubles here!
-	return NewVector3d(
+	return NewVector3(
 		v.Y*w.Z-v.Z*w.Y,
 		v.Z*w.X-v.X*w.Z,
 		v.X*w.Y-v.Y*w.X)
 }
 
-func (v Vector3d) Get(component int) float64 {
+func (v Vector3) Get(component int) float64 {
 	switch component {
 	case 0:
 		return v.X
@@ -73,15 +73,15 @@ func (v Vector3d) Get(component int) float64 {
 	}
 }
 
-func (v Vector3d) GetMinComponent() float64 {
+func (v Vector3) GetMinComponent() float64 {
 	return math.Min(v.X, math.Min(v.Y, v.Z))
 }
 
-func (v Vector3d) GetMaxComponent() float64 {
+func (v Vector3) GetMaxComponent() float64 {
 	return math.Max(v.X, math.Max(v.Y, v.Z))
 }
 
-func (v Vector3d) GetMaxDimension() int {
+func (v Vector3) GetMaxDimension() int {
 	if v.X > v.Y {
 		if v.X > v.Z {
 			return 0
@@ -94,22 +94,22 @@ func (v Vector3d) GetMaxDimension() int {
 	return 2
 }
 
-func (v Vector3d) Min(w Vector3d) Vector3d {
-	return NewVector3d(
+func (v Vector3) Min(w Vector3) Vector3 {
+	return NewVector3(
 		math.Min(v.X, w.X),
 		math.Min(v.Y, w.Y),
 		math.Min(v.Z, w.Z))
 }
 
-func (v Vector3d) Max(w Vector3d) Vector3d {
-	return NewVector3d(
+func (v Vector3) Max(w Vector3) Vector3 {
+	return NewVector3(
 		math.Max(v.X, w.X),
 		math.Max(v.Y, w.Y),
 		math.Max(v.Z, w.Z))
 }
 
-func (v Vector3d) Permute(x, y, z int) Vector3d {
-	return NewVector3d(
+func (v Vector3) Permute(x, y, z int) Vector3 {
+	return NewVector3(
 		v.Get(x),
 		v.Get(y),
 		v.Get(z))
