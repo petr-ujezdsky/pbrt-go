@@ -69,7 +69,7 @@ func TestPoint3Multiply(t *testing.T) {
 	assert.Equal(t, 15.0, res.Z)
 }
 
-func TestPoint3istance(t *testing.T) {
+func TestPoint3Distance(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 
@@ -78,7 +78,7 @@ func TestPoint3istance(t *testing.T) {
 	assert.Equal(t, 6.928203230275509, res)
 }
 
-func TestPoint3istanceSq(t *testing.T) {
+func TestPoint3DistanceSq(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 

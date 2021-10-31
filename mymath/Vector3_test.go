@@ -15,18 +15,18 @@ func TestVector3NewVector3(t *testing.T) {
 	assert.Equal(t, 3.0, v.Z)
 }
 
-func TestVector3Vector3LengthSq(t *testing.T) {
+func TestVector3LengthSq(t *testing.T) {
 	v := mymath.NewVector3(3, 3, 3)
 
 	assert.Equal(t, 27.0, v.LengthSq())
 }
 
-func TestVector3Vector3Length(t *testing.T) {
+func TestVector3Length(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 
 	assert.Equal(t, 3.7416573867739413, v.Length())
 }
-func TestVector3Vector3Add(t *testing.T) {
+func TestVector3Add(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 	w := mymath.NewVector3(5, 6, 7)
 
@@ -36,7 +36,7 @@ func TestVector3Vector3Add(t *testing.T) {
 	assert.Equal(t, 8.0, res.Y)
 	assert.Equal(t, 10.0, res.Z)
 }
-func TestVector3Vector3Subtract(t *testing.T) {
+func TestVector3Subtract(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 	w := mymath.NewVector3(5, 6, 7)
 
@@ -47,7 +47,7 @@ func TestVector3Vector3Subtract(t *testing.T) {
 	assert.Equal(t, -4.0, res.Z)
 }
 
-func TestVector3Vector3Multiply(t *testing.T) {
+func TestVector3Multiply(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 
 	res := v.Multiply(5.0)
@@ -57,7 +57,7 @@ func TestVector3Vector3Multiply(t *testing.T) {
 	assert.Equal(t, 15.0, res.Z)
 }
 
-func TestVector3Vector3ivide(t *testing.T) {
+func TestVector3Divide(t *testing.T) {
 	v := mymath.NewVector3(2, 4, -8)
 
 	res := v.Divide(2.0)
@@ -66,7 +66,7 @@ func TestVector3Vector3ivide(t *testing.T) {
 	assert.Equal(t, 2.0, res.Y)
 	assert.Equal(t, -4.0, res.Z)
 }
-func TestVector3Vector3Negate(t *testing.T) {
+func TestVector3Negate(t *testing.T) {
 	v := mymath.NewVector3(2, 4, -8)
 
 	res := v.Negate()
@@ -76,7 +76,7 @@ func TestVector3Vector3Negate(t *testing.T) {
 	assert.Equal(t, 8.0, res.Z)
 }
 
-func TestVector3Vector3Abs(t *testing.T) {
+func TestVector3Abs(t *testing.T) {
 	v := mymath.NewVector3(2, 4, -8)
 
 	res := v.Abs()
@@ -86,7 +86,7 @@ func TestVector3Vector3Abs(t *testing.T) {
 	assert.Equal(t, 8.0, res.Z)
 }
 
-func TestVector3Vector3Normalize(t *testing.T) {
+func TestVector3Normalize(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 
 	res := v.Normalize()
@@ -96,7 +96,7 @@ func TestVector3Vector3Normalize(t *testing.T) {
 	assert.Equal(t, 0.8017837257372732, res.Z)
 }
 
-func TestVector3ot(t *testing.T) {
+func TestVector3Dot(t *testing.T) {
 	v := mymath.NewVector3(-1, -2, -3)
 	w := mymath.NewVector3(4, 5, 6)
 
