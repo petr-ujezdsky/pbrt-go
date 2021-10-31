@@ -1,4 +1,4 @@
-package vector3d
+package mymath
 
 import "math"
 

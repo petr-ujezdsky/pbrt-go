@@ -1,24 +1,23 @@
-package point3d_test
+package mymath_test
 
 import (
-	"pbrt-go/mymath/point3d"
-	"pbrt-go/mymath/vector3d"
+	"pbrt-go/mymath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConstructor(t *testing.T) {
-	p := point3d.NewPoint3d(1, 2, 3)
+func TestPoint3NewPoint3d(t *testing.T) {
+	p := mymath.NewPoint3d(1, 2, 3)
 
 	assert.Equal(t, 1.0, p.X)
 	assert.Equal(t, 2.0, p.Y)
 	assert.Equal(t, 3.0, p.Z)
 }
 
-func TestAddP(t *testing.T) {
-	p1 := point3d.NewPoint3d(1, 2, 3)
-	p2 := point3d.NewPoint3d(5, 6, 7)
+func TestPoint3AddP(t *testing.T) {
+	p1 := mymath.NewPoint3d(1, 2, 3)
+	p2 := mymath.NewPoint3d(5, 6, 7)
 
 	res := p1.AddP(p2)
 
@@ -27,9 +26,9 @@ func TestAddP(t *testing.T) {
 	assert.Equal(t, 10.0, res.Z)
 }
 
-func TestAddV(t *testing.T) {
-	p := point3d.NewPoint3d(1, 2, 3)
-	v := vector3d.NewVector3d(5, 6, 7)
+func TestPoint3AddV(t *testing.T) {
+	p := mymath.NewPoint3d(1, 2, 3)
+	v := mymath.NewVector3d(5, 6, 7)
 
 	res := p.AddV(v)
 
@@ -38,9 +37,9 @@ func TestAddV(t *testing.T) {
 	assert.Equal(t, 10.0, res.Z)
 }
 
-func TestSubtractP(t *testing.T) {
-	p1 := point3d.NewPoint3d(1, 2, 3)
-	p2 := point3d.NewPoint3d(5, 6, 7)
+func TestPoint3SubtractP(t *testing.T) {
+	p1 := mymath.NewPoint3d(1, 2, 3)
+	p2 := mymath.NewPoint3d(5, 6, 7)
 
 	res := p1.SubtractP(p2)
 
@@ -49,9 +48,9 @@ func TestSubtractP(t *testing.T) {
 	assert.Equal(t, -4.0, res.Z)
 }
 
-func TestSubtractV(t *testing.T) {
-	p := point3d.NewPoint3d(1, 2, 3)
-	v := vector3d.NewVector3d(5, 6, 7)
+func TestPoint3SubtractV(t *testing.T) {
+	p := mymath.NewPoint3d(1, 2, 3)
+	v := mymath.NewVector3d(5, 6, 7)
 
 	res := p.SubtractV(v)
 
@@ -60,8 +59,8 @@ func TestSubtractV(t *testing.T) {
 	assert.Equal(t, -4.0, res.Z)
 }
 
-func TestMultiply(t *testing.T) {
-	v := point3d.NewPoint3d(1, 2, 3)
+func TestPoint3Multiply(t *testing.T) {
+	v := mymath.NewPoint3d(1, 2, 3)
 
 	res := v.Multiply(5.0)
 
@@ -70,37 +69,37 @@ func TestMultiply(t *testing.T) {
 	assert.Equal(t, 15.0, res.Z)
 }
 
-func TestDistance(t *testing.T) {
-	p1 := point3d.NewPoint3d(1, 2, 3)
-	p2 := point3d.NewPoint3d(5, 6, 7)
+func TestPoint3Distance(t *testing.T) {
+	p1 := mymath.NewPoint3d(1, 2, 3)
+	p2 := mymath.NewPoint3d(5, 6, 7)
 
 	res := p1.Distance(p2)
 
 	assert.Equal(t, 6.928203230275509, res)
 }
 
-func TestDistanceSq(t *testing.T) {
-	p1 := point3d.NewPoint3d(1, 2, 3)
-	p2 := point3d.NewPoint3d(5, 6, 7)
+func TestPoint3DistanceSq(t *testing.T) {
+	p1 := mymath.NewPoint3d(1, 2, 3)
+	p2 := mymath.NewPoint3d(5, 6, 7)
 
 	res := p1.DistanceSq(p2)
 
 	assert.Equal(t, 48.0, res)
 }
 
-func TestLerp(t *testing.T) {
-	p := point3d.NewPoint3d(1, 2, 3)
+func TestPoint3Lerp(t *testing.T) {
+	p := mymath.NewPoint3d(1, 2, 3)
 
-	res := p.Lerp(0.5, point3d.NewPoint3d(5, 6, 7))
+	res := p.Lerp(0.5, mymath.NewPoint3d(5, 6, 7))
 
 	assert.Equal(t, 3.0, res.X)
 	assert.Equal(t, 4.0, res.Y)
 	assert.Equal(t, 5.0, res.Z)
 }
 
-func TestMin(t *testing.T) {
-	v := point3d.NewPoint3d(1, 8, 3)
-	w := point3d.NewPoint3d(4, 5, 6)
+func TestPoint3Min(t *testing.T) {
+	v := mymath.NewPoint3d(1, 8, 3)
+	w := mymath.NewPoint3d(4, 5, 6)
 
 	res := v.Min(w)
 
@@ -109,9 +108,9 @@ func TestMin(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestMax(t *testing.T) {
-	v := point3d.NewPoint3d(1, 8, 3)
-	w := point3d.NewPoint3d(4, 5, 6)
+func TestPoint3Max(t *testing.T) {
+	v := mymath.NewPoint3d(1, 8, 3)
+	w := mymath.NewPoint3d(4, 5, 6)
 
 	res := v.Max(w)
 
@@ -120,8 +119,8 @@ func TestMax(t *testing.T) {
 	assert.Equal(t, 6.0, res.Z)
 }
 
-func TestFloor(t *testing.T) {
-	v := point3d.NewPoint3d(1.8, 8.9, 3.1)
+func TestPoint3Floor(t *testing.T) {
+	v := mymath.NewPoint3d(1.8, 8.9, 3.1)
 
 	res := v.Floor()
 
@@ -130,8 +129,8 @@ func TestFloor(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestCeil(t *testing.T) {
-	v := point3d.NewPoint3d(1.8, 8.9, 3.1)
+func TestPoint3Ceil(t *testing.T) {
+	v := mymath.NewPoint3d(1.8, 8.9, 3.1)
 
 	res := v.Ceil()
 
@@ -140,8 +139,8 @@ func TestCeil(t *testing.T) {
 	assert.Equal(t, 4.0, res.Z)
 }
 
-func TestAbs(t *testing.T) {
-	v := point3d.NewPoint3d(-1, -2, -3)
+func TestPoint3Abs(t *testing.T) {
+	v := mymath.NewPoint3d(-1, -2, -3)
 
 	res := v.Abs()
 
@@ -150,16 +149,16 @@ func TestAbs(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestGet(t *testing.T) {
-	v := point3d.NewPoint3d(1, 2, 3)
+func TestPoint3Get(t *testing.T) {
+	v := mymath.NewPoint3d(1, 2, 3)
 
 	assert.Equal(t, 1.0, v.Get(0))
 	assert.Equal(t, 2.0, v.Get(1))
 	assert.Equal(t, 3.0, v.Get(2))
 }
 
-func TestPermute(t *testing.T) {
-	v := point3d.NewPoint3d(1, 8, 3)
+func TestPoint3Permute(t *testing.T) {
+	v := mymath.NewPoint3d(1, 8, 3)
 
 	res := v.Permute(2, 0, 1)
 
