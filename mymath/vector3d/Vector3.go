@@ -6,6 +6,8 @@ type Vector3d struct {
 	X, Y, Z float64
 }
 
+var EMPTY = NewVector3d(0, 0, 0)
+
 func NewVector3d(x, y, z float64) Vector3d {
 	return Vector3d{x, y, z}
 }
