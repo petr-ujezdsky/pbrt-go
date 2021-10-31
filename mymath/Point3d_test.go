@@ -97,6 +97,16 @@ func TestPoint3Lerp(t *testing.T) {
 	assert.Equal(t, 5.0, res.Z)
 }
 
+func TestPoint3LerpP(t *testing.T) {
+	p := mymath.NewPoint3d(1, 2, 3)
+
+	res := p.LerpP(mymath.NewPoint3d(0, 0.5, 1), mymath.NewPoint3d(5, 6, 7))
+
+	assert.Equal(t, 1.0, res.X)
+	assert.Equal(t, 4.0, res.Y)
+	assert.Equal(t, 7.0, res.Z)
+}
+
 func TestPoint3Min(t *testing.T) {
 	v := mymath.NewPoint3d(1, 8, 3)
 	w := mymath.NewPoint3d(4, 5, 6)

@@ -44,15 +44,11 @@ func (p1 Point3d) Lerp(t float64, p2 Point3d) Point3d {
 	return p1.Multiply(1 - t).AddP(p2.Multiply(t))
 }
 
-func lerp(t, v1, v2 float64) float64 {
-	return (1-t)*v1 + t*v2
-}
-
 func (p1 Point3d) LerpP(t Point3d, p2 Point3d) Point3d {
 	return NewPoint3d(
-		lerp(t.X, p1.X, p2.X),
-		lerp(t.Y, p1.Y, p2.Y),
-		lerp(t.Z, p1.Z, p2.Z))
+		Lerp(t.X, p1.X, p2.X),
+		Lerp(t.Y, p1.Y, p2.Y),
+		Lerp(t.Z, p1.Z, p2.Z))
 }
 
 func (p Point3d) Min(w Point3d) Point3d {
