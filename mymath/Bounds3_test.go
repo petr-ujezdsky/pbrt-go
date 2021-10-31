@@ -234,6 +234,17 @@ func TestBounds3Offset(t *testing.T) {
 	assert.Equal(t, mymath.NewVector3(0.5, 0.5, 0.5), b.Offset(mymath.NewPoint3(3, 4, 5)))
 }
 
+func TestBounds3BoundingSphere(t *testing.T) {
+	b := mymath.NewBounds3(
+		mymath.NewPoint3(1, 2, 3),
+		mymath.NewPoint3(5, 6, 7))
+
+	res := b.BoundingSphere()
+
+	assert.Equal(t, mymath.NewPoint3(3, 4, 5), res.Center)
+	assert.Equal(t, 3.4641016151377544, res.Radius)
+}
+
 // func TestBounds3Overlaps(t *testing.T) {
 // 	b1 := mymath.NewBounds3(
 // 		mymath.NewPoint3(0, 0, 0),

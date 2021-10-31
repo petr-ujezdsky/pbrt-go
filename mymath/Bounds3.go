@@ -138,3 +138,17 @@ func (b Bounds3) Offset(p Point3) Vector3 {
 
 	return o
 }
+
+func (b Bounds3) BoundingSphere() BoundingSphere {
+	center := (b.PMin.AddP(b.PMax).Multiply(0.5))
+
+	var radius float64
+
+	if b.Inside(center) {
+		radius = center.Distance(b.PMax)
+	} else {
+		radius = 0
+	}
+
+	return NewBoundingSphere(center, radius)
+}
