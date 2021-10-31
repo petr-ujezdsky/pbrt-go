@@ -244,18 +244,3 @@ func TestBounds3BoundingSphere(t *testing.T) {
 	assert.Equal(t, mymath.NewPoint3(3, 4, 5), res.Center)
 	assert.Equal(t, 3.4641016151377544, res.Radius)
 }
-
-// func TestBounds3Overlaps(t *testing.T) {
-// 	b1 := mymath.NewBounds3(
-// 		mymath.NewPoint3(0, 0, 0),
-// 		mymath.NewPoint3(1, 1, 1))
-
-// 	b2 := mymath.NewBounds3(
-// 		mymath.NewPoint3(0.5, 0.5, 0.5),
-// 		mymath.NewPoint3(2, 2, 2))
-
-// 	res := b1.Intersect(b2)
-
-// 	assert.Equal(t, mymath.NewPoint3(0.5, 0.5, 0.5), res.PMin)
-// 	assert.Equal(t, mymath.NewPoint3(1, 1, 1), res.PMax)
-// }
