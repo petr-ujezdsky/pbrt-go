@@ -1,19 +1,19 @@
 package mymath
 
-type Bounds3d struct {
+type Bounds3 struct {
 	PMin Point3
 	PMax Point3
 }
 
-func NewBounds3dP(p Point3) Bounds3d {
-	return Bounds3d{p, p}
+func NewBounds3P(p Point3) Bounds3 {
+	return Bounds3{p, p}
 }
 
-func NewBounds3d(p1 Point3, p2 Point3) Bounds3d {
-	return Bounds3d{p1.Min(p2), p1.Max(p2)}
+func NewBounds3(p1 Point3, p2 Point3) Bounds3 {
+	return Bounds3{p1.Min(p2), p1.Max(p2)}
 }
 
-func (b Bounds3d) Get(component int) Point3 {
+func (b Bounds3) Get(component int) Point3 {
 	if component == 0 {
 		return b.PMin
 	}
@@ -21,7 +21,7 @@ func (b Bounds3d) Get(component int) Point3 {
 	return b.PMax
 }
 
-func (b Bounds3d) Corner(corner int) Point3 {
+func (b Bounds3) Corner(corner int) Point3 {
 	var c1, c2, c3 int
 	c1 = corner & 1
 
@@ -43,25 +43,25 @@ func (b Bounds3d) Corner(corner int) Point3 {
 		b.Get(c3).Z)
 }
 
-func (b Bounds3d) UnionP(p Point3) Bounds3d {
-	return NewBounds3d(
+func (b Bounds3) UnionP(p Point3) Bounds3 {
+	return NewBounds3(
 		b.PMin.Min(p),
 		b.PMax.Max(p))
 }
 
-func (b1 Bounds3d) UnionB(b2 Bounds3d) Bounds3d {
-	return NewBounds3d(
+func (b1 Bounds3) UnionB(b2 Bounds3) Bounds3 {
+	return NewBounds3(
 		b1.PMin.Min(b2.PMin),
 		b1.PMax.Max(b2.PMax))
 }
 
-func (b1 Bounds3d) Intersect(b2 Bounds3d) Bounds3d {
-	return NewBounds3d(
+func (b1 Bounds3) Intersect(b2 Bounds3) Bounds3 {
+	return NewBounds3(
 		b1.PMin.Max(b2.PMin),
 		b1.PMax.Min(b2.PMax))
 }
 
-func (b1 Bounds3d) Overlaps(b2 Bounds3d) bool {
+func (b1 Bounds3) Overlaps(b2 Bounds3) bool {
 	x := (b1.PMax.X >= b2.PMin.X) && (b1.PMin.X <= b2.PMax.X)
 	y := (b1.PMax.Y >= b2.PMin.Y) && (b1.PMin.Y <= b2.PMax.Y)
 	z := (b1.PMax.Z >= b2.PMin.Z) && (b1.PMin.Z <= b2.PMax.Z)
@@ -69,41 +69,41 @@ func (b1 Bounds3d) Overlaps(b2 Bounds3d) bool {
 	return (x && y && z)
 }
 
-func (b Bounds3d) Inside(p Point3) bool {
+func (b Bounds3) Inside(p Point3) bool {
 	return (p.X >= b.PMin.X && p.X <= b.PMax.X &&
 		p.Y >= b.PMin.Y && p.Y <= b.PMax.Y &&
 		p.Z >= b.PMin.Z && p.Z <= b.PMax.Z)
 }
 
-func (b Bounds3d) InsideExclusive(p Point3) bool {
+func (b Bounds3) InsideExclusive(p Point3) bool {
 	return (p.X >= b.PMin.X && p.X < b.PMax.X &&
 		p.Y >= b.PMin.Y && p.Y < b.PMax.Y &&
 		p.Z >= b.PMin.Z && p.Z < b.PMax.Z)
 }
 
-func (b Bounds3d) Expand(delta float64) Bounds3d {
+func (b Bounds3) Expand(delta float64) Bounds3 {
 	vDelta := NewVector3(delta, delta, delta)
 
-	return NewBounds3d(
+	return NewBounds3(
 		b.PMin.SubtractV(vDelta),
 		b.PMax.AddV(vDelta))
 }
 
-func (b Bounds3d) Diagonal() Vector3 {
+func (b Bounds3) Diagonal() Vector3 {
 	return b.PMax.SubtractP(b.PMin)
 }
 
-func (b Bounds3d) SurfaceArea() float64 {
+func (b Bounds3) SurfaceArea() float64 {
 	d := b.Diagonal()
 	return 2 * (d.X*d.Y + d.X*d.Z + d.Y*d.Z)
 }
 
-func (b Bounds3d) Volume() float64 {
+func (b Bounds3) Volume() float64 {
 	d := b.Diagonal()
 	return d.X * d.Y * d.Z
 }
 
-func (b Bounds3d) MaximumExtent() int {
+func (b Bounds3) MaximumExtent() int {
 	d := b.Diagonal()
 
 	if d.X > d.Y && d.X > d.Z {
@@ -115,6 +115,6 @@ func (b Bounds3d) MaximumExtent() int {
 	return 2
 }
 
-func (b Bounds3d) Lerp(t Point3) Point3 {
+func (b Bounds3) Lerp(t Point3) Point3 {
 	return b.PMin.LerpP(t, b.PMax)
 }

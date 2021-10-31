@@ -7,30 +7,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBounds3NewBounds3dP(t *testing.T) {
+func TestBounds3NewBounds3P(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 
-	b := mymath.NewBounds3dP(p)
+	b := mymath.NewBounds3P(p)
 
 	assert.Equal(t, p, b.PMin)
 	assert.Equal(t, p, b.PMax)
 }
 
-func TestBounds3NewBounds3d(t *testing.T) {
+func TestBounds3NewBounds3(t *testing.T) {
 	p1 := mymath.NewPoint3(0, 0, 0)
 	p2 := mymath.NewPoint3(1, 2, 3)
 
-	b := mymath.NewBounds3d(p1, p2)
+	b := mymath.NewBounds3(p1, p2)
 
 	assert.Equal(t, p1, b.PMin)
 	assert.Equal(t, p2, b.PMax)
 }
 
-func TestBounds3NewBounds3dMinMax(t *testing.T) {
+func TestBounds3NewBounds3MinMax(t *testing.T) {
 	p1 := mymath.NewPoint3(0, 0, 0)
 	p2 := mymath.NewPoint3(1, 2, 3)
 
-	b := mymath.NewBounds3d(p2, p1)
+	b := mymath.NewBounds3(p2, p1)
 
 	assert.Equal(t, p1, b.PMin)
 	assert.Equal(t, p2, b.PMax)
@@ -40,7 +40,7 @@ func TestBounds3Get(t *testing.T) {
 	p1 := mymath.NewPoint3(5, 6, 7)
 	p2 := mymath.NewPoint3(1, 2, 3)
 
-	b := mymath.NewBounds3d(p1, p2)
+	b := mymath.NewBounds3(p1, p2)
 
 	assert.Equal(t, p2, b.Get(0))
 	assert.Equal(t, p1, b.Get(1))
@@ -50,7 +50,7 @@ func TestBounds3Corner(t *testing.T) {
 	p1 := mymath.NewPoint3(0, 0, 0)
 	p2 := mymath.NewPoint3(1, 1, 1)
 
-	b := mymath.NewBounds3d(p1, p2)
+	b := mymath.NewBounds3(p1, p2)
 
 	assert.Equal(t, mymath.NewPoint3(0, 0, 0), b.Corner(0))
 	assert.Equal(t, mymath.NewPoint3(1, 0, 0), b.Corner(1))
@@ -66,7 +66,7 @@ func TestBounds3UnionP(t *testing.T) {
 	p1 := mymath.NewPoint3(0, 0, 0)
 	p2 := mymath.NewPoint3(1, 1, 1)
 
-	b := mymath.NewBounds3d(p1, p2)
+	b := mymath.NewBounds3(p1, p2)
 
 	res := b.UnionP(mymath.NewPoint3(-1, 0, 2))
 
@@ -75,11 +75,11 @@ func TestBounds3UnionP(t *testing.T) {
 }
 
 func TestBounds3UnionB(t *testing.T) {
-	b1 := mymath.NewBounds3d(
+	b1 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
-	b2 := mymath.NewBounds3d(
+	b2 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(-1, -1, -1))
 
@@ -90,11 +90,11 @@ func TestBounds3UnionB(t *testing.T) {
 }
 
 func TestBounds3Intersect(t *testing.T) {
-	b1 := mymath.NewBounds3d(
+	b1 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
-	b2 := mymath.NewBounds3d(
+	b2 := mymath.NewBounds3(
 		mymath.NewPoint3(0.5, 0.5, 0.5),
 		mymath.NewPoint3(2, 2, 2))
 
@@ -105,11 +105,11 @@ func TestBounds3Intersect(t *testing.T) {
 }
 
 func TestBounds3IntersectNone(t *testing.T) {
-	b1 := mymath.NewBounds3d(
+	b1 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
-	b2 := mymath.NewBounds3d(
+	b2 := mymath.NewBounds3(
 		mymath.NewPoint3(-1, -1, -1),
 		mymath.NewPoint3(-2, -2, -2))
 
@@ -120,11 +120,11 @@ func TestBounds3IntersectNone(t *testing.T) {
 }
 
 func TestBounds3OverlapsTrue(t *testing.T) {
-	b1 := mymath.NewBounds3d(
+	b1 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
-	b2 := mymath.NewBounds3d(
+	b2 := mymath.NewBounds3(
 		mymath.NewPoint3(0.5, 0.5, 0.5),
 		mymath.NewPoint3(2, 2, 2))
 
@@ -132,11 +132,11 @@ func TestBounds3OverlapsTrue(t *testing.T) {
 }
 
 func TestBounds3OverlapsFalse(t *testing.T) {
-	b1 := mymath.NewBounds3d(
+	b1 := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
-	b2 := mymath.NewBounds3d(
+	b2 := mymath.NewBounds3(
 		mymath.NewPoint3(-1, -1, -1),
 		mymath.NewPoint3(-2, -2, -2))
 
@@ -144,7 +144,7 @@ func TestBounds3OverlapsFalse(t *testing.T) {
 }
 
 func TestBounds3Inside(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
@@ -155,7 +155,7 @@ func TestBounds3Inside(t *testing.T) {
 }
 
 func TestBounds3InsideExclusive(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
@@ -164,7 +164,7 @@ func TestBounds3InsideExclusive(t *testing.T) {
 }
 
 func TestBounds3Expand(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(0, 0, 0),
 		mymath.NewPoint3(1, 1, 1))
 
@@ -175,7 +175,7 @@ func TestBounds3Expand(t *testing.T) {
 }
 
 func TestBounds3Diagonal(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(1, 2, 3),
 		mymath.NewPoint3(5, 6, 7))
 
@@ -185,7 +185,7 @@ func TestBounds3Diagonal(t *testing.T) {
 }
 
 func TestBounds3SurfaceArea(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(1, 2, 3),
 		mymath.NewPoint3(5, 6, 7))
 
@@ -195,7 +195,7 @@ func TestBounds3SurfaceArea(t *testing.T) {
 }
 
 func TestBounds3Volume(t *testing.T) {
-	b := mymath.NewBounds3d(
+	b := mymath.NewBounds3(
 		mymath.NewPoint3(1, 2, 3),
 		mymath.NewPoint3(5, 6, 7))
 
@@ -207,29 +207,29 @@ func TestBounds3Volume(t *testing.T) {
 func TestBounds3MaximumExtent(t *testing.T) {
 	assert.Equal(t,
 		0,
-		mymath.NewBounds3d(
+		mymath.NewBounds3(
 			mymath.NewPoint3(0, 0, 0),
 			mymath.NewPoint3(5, 1, 1)).MaximumExtent())
 
 	assert.Equal(t,
 		1,
-		mymath.NewBounds3d(
+		mymath.NewBounds3(
 			mymath.NewPoint3(0, 0, 0),
 			mymath.NewPoint3(1, 5, 1)).MaximumExtent())
 
 	assert.Equal(t,
 		2,
-		mymath.NewBounds3d(
+		mymath.NewBounds3(
 			mymath.NewPoint3(0, 0, 0),
 			mymath.NewPoint3(1, 1, 5)).MaximumExtent())
 }
 
 // func TestBounds3Overlaps(t *testing.T) {
-// 	b1 := mymath.NewBounds3d(
+// 	b1 := mymath.NewBounds3(
 // 		mymath.NewPoint3(0, 0, 0),
 // 		mymath.NewPoint3(1, 1, 1))
 
-// 	b2 := mymath.NewBounds3d(
+// 	b2 := mymath.NewBounds3(
 // 		mymath.NewPoint3(0.5, 0.5, 0.5),
 // 		mymath.NewPoint3(2, 2, 2))
 
