@@ -118,3 +118,23 @@ func (b Bounds3) MaximumExtent() int {
 func (b Bounds3) Lerp(t Point3) Point3 {
 	return b.PMin.LerpP(t, b.PMax)
 }
+
+// Offset returns the continuous position of a point relative to the corners of the box,
+// where a point at the minimum corner has offset (0,0,0), a point at the maximum corner has offset (1,1,1), and so forth.
+func (b Bounds3) Offset(p Point3) Vector3 {
+	o := p.SubtractP(b.PMin)
+
+	if b.PMax.X > b.PMin.X {
+		o.X /= b.PMax.X - b.PMin.X
+	}
+
+	if b.PMax.Y > b.PMin.Y {
+		o.Y /= b.PMax.Y - b.PMin.Y
+	}
+
+	if b.PMax.Z > b.PMin.Z {
+		o.Z /= b.PMax.Z - b.PMin.Z
+	}
+
+	return o
+}
