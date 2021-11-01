@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRayDifferentialNewRayDifferentialRay(t *testing.T) {
+func TestRayDifferential_NewRayDifferentialRay(t *testing.T) {
 	ray := mymath.NewRay(
 		mymath.NewPoint3(1, 2, 3),
 		mymath.NewVector3(5, 6, 7),
@@ -31,7 +31,7 @@ func TestRayDifferentialNewRayDifferentialRay(t *testing.T) {
 	assert.Equal(t, mymath.NewVector3(0, 0, 0), rd.RyDirection)
 }
 
-func TestRayDifferentialScaleDifferentials(t *testing.T) {
+func TestRayDifferential_ScaleDifferentials(t *testing.T) {
 	ray := mymath.NewRay(
 		mymath.NewPoint3(1, 2, 3),
 		mymath.NewVector3(5, 6, 7),

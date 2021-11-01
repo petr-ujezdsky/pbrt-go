@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPoint3NewPoint3(t *testing.T) {
+func TestPoint3_NewPoint3(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 
 	assert.Equal(t, 1.0, p.X)
@@ -15,7 +15,7 @@ func TestPoint3NewPoint3(t *testing.T) {
 	assert.Equal(t, 3.0, p.Z)
 }
 
-func TestPoint3AddP(t *testing.T) {
+func TestPoint3_AddP(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 
@@ -26,7 +26,7 @@ func TestPoint3AddP(t *testing.T) {
 	assert.Equal(t, 10.0, res.Z)
 }
 
-func TestPoint3AddV(t *testing.T) {
+func TestPoint3_AddV(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 	v := mymath.NewVector3(5, 6, 7)
 
@@ -37,7 +37,7 @@ func TestPoint3AddV(t *testing.T) {
 	assert.Equal(t, 10.0, res.Z)
 }
 
-func TestPoint3SubtractP(t *testing.T) {
+func TestPoint3_SubtractP(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 
@@ -48,7 +48,7 @@ func TestPoint3SubtractP(t *testing.T) {
 	assert.Equal(t, -4.0, res.Z)
 }
 
-func TestPoint3SubtractV(t *testing.T) {
+func TestPoint3_SubtractV(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 	v := mymath.NewVector3(5, 6, 7)
 
@@ -59,7 +59,7 @@ func TestPoint3SubtractV(t *testing.T) {
 	assert.Equal(t, -4.0, res.Z)
 }
 
-func TestPoint3Multiply(t *testing.T) {
+func TestPoint3_Multiply(t *testing.T) {
 	v := mymath.NewPoint3(1, 2, 3)
 
 	res := v.Multiply(5.0)
@@ -69,7 +69,7 @@ func TestPoint3Multiply(t *testing.T) {
 	assert.Equal(t, 15.0, res.Z)
 }
 
-func TestPoint3Distance(t *testing.T) {
+func TestPoint3_Distance(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 
@@ -78,7 +78,7 @@ func TestPoint3Distance(t *testing.T) {
 	assert.Equal(t, 6.928203230275509, res)
 }
 
-func TestPoint3DistanceSq(t *testing.T) {
+func TestPoint3_DistanceSq(t *testing.T) {
 	p1 := mymath.NewPoint3(1, 2, 3)
 	p2 := mymath.NewPoint3(5, 6, 7)
 
@@ -87,7 +87,7 @@ func TestPoint3DistanceSq(t *testing.T) {
 	assert.Equal(t, 48.0, res)
 }
 
-func TestPoint3Lerp(t *testing.T) {
+func TestPoint3_Lerp(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 
 	res := p.Lerp(0.5, mymath.NewPoint3(5, 6, 7))
@@ -97,7 +97,7 @@ func TestPoint3Lerp(t *testing.T) {
 	assert.Equal(t, 5.0, res.Z)
 }
 
-func TestPoint3LerpP(t *testing.T) {
+func TestPoint3_LerpP(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 
 	res := p.LerpP(mymath.NewPoint3(0, 0.5, 1), mymath.NewPoint3(5, 6, 7))
@@ -107,7 +107,7 @@ func TestPoint3LerpP(t *testing.T) {
 	assert.Equal(t, 7.0, res.Z)
 }
 
-func TestPoint3Min(t *testing.T) {
+func TestPoint3_Min(t *testing.T) {
 	v := mymath.NewPoint3(1, 8, 3)
 	w := mymath.NewPoint3(4, 5, 6)
 
@@ -118,7 +118,7 @@ func TestPoint3Min(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestPoint3Max(t *testing.T) {
+func TestPoint3_Max(t *testing.T) {
 	v := mymath.NewPoint3(1, 8, 3)
 	w := mymath.NewPoint3(4, 5, 6)
 
@@ -129,7 +129,7 @@ func TestPoint3Max(t *testing.T) {
 	assert.Equal(t, 6.0, res.Z)
 }
 
-func TestPoint3Floor(t *testing.T) {
+func TestPoint3_Floor(t *testing.T) {
 	v := mymath.NewPoint3(1.8, 8.9, 3.1)
 
 	res := v.Floor()
@@ -139,7 +139,7 @@ func TestPoint3Floor(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestPoint3Ceil(t *testing.T) {
+func TestPoint3_Ceil(t *testing.T) {
 	v := mymath.NewPoint3(1.8, 8.9, 3.1)
 
 	res := v.Ceil()
@@ -149,7 +149,7 @@ func TestPoint3Ceil(t *testing.T) {
 	assert.Equal(t, 4.0, res.Z)
 }
 
-func TestPoint3Abs(t *testing.T) {
+func TestPoint3_Abs(t *testing.T) {
 	v := mymath.NewPoint3(-1, -2, -3)
 
 	res := v.Abs()
@@ -159,7 +159,7 @@ func TestPoint3Abs(t *testing.T) {
 	assert.Equal(t, 3.0, res.Z)
 }
 
-func TestPoint3Get(t *testing.T) {
+func TestPoint3_Get(t *testing.T) {
 	v := mymath.NewPoint3(1, 2, 3)
 
 	assert.Equal(t, 1.0, v.Get(0))
@@ -167,7 +167,7 @@ func TestPoint3Get(t *testing.T) {
 	assert.Equal(t, 3.0, v.Get(2))
 }
 
-func TestPoint3Permute(t *testing.T) {
+func TestPoint3_Permute(t *testing.T) {
 	v := mymath.NewPoint3(1, 8, 3)
 
 	res := v.Permute(2, 0, 1)

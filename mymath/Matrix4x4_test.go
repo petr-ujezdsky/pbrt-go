@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMatrix4x4NewMatrix4x4All(t *testing.T) {
+func TestMatrix4x4_NewMatrix4x4All(t *testing.T) {
 	m := mymath.NewMatrix4x4All(
 		1, 2, 3, 4,
 		5, 6, 7, 8,
@@ -39,7 +39,7 @@ func TestMatrix4x4NewMatrix4x4All(t *testing.T) {
 	assert.Equal(t, float32(16.0), m.M[3][3])
 }
 
-func TestMatrix4x4Identity(t *testing.T) {
+func TestMatrix4x4_Identity(t *testing.T) {
 	m := mymath.Identity()
 
 	assert.Equal(t, float32(1.0), m.M[0][0])
