@@ -46,8 +46,12 @@ func NewTransformScale(x, y, z float32) Transform {
 	}
 }
 
-func (t *Transform) Apply(p *Point3) *Point3 {
+func (t *Transform) ApplyP(p *Point3) *Point3 {
 	return t.m.MultiplyP(p)
+}
+
+func (t *Transform) ApplyV(v *Vector3) *Vector3 {
+	return t.m.MultiplyV(v)
 }
 
 func (t *Transform) Inverse() Transform {
@@ -60,4 +64,16 @@ func (t *Transform) Transpose() Transform {
 
 func (t *Transform) IsIdentity() bool {
 	return t.m.IsIdentity()
+}
+
+func (t *Transform) HasScale() bool {
+	la2 := t.ApplyV(&Vector3{1, 0, 0}).LengthSq()
+	lb2 := t.ApplyV(&Vector3{0, 1, 0}).LengthSq()
+	lc2 := t.ApplyV(&Vector3{0, 0, 1}).LengthSq()
+
+	notOne := func(x float64) bool {
+		return x < 0.999 || x > 1.001
+	}
+
+	return notOne(la2) || notOne(lb2) || notOne(lc2)
 }

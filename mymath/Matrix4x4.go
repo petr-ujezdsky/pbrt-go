@@ -71,6 +71,16 @@ func (m *Matrix4x4) MultiplyP(p *Point3) *Point3 {
 	return &r
 }
 
+func (m *Matrix4x4) MultiplyV(v *Vector3) *Vector3 {
+	xv := float64(m.M[0][0])*v.X + float64(m.M[0][1])*v.Y + float64(m.M[0][2])*v.Z
+	yv := float64(m.M[1][0])*v.X + float64(m.M[1][1])*v.Y + float64(m.M[1][2])*v.Z
+	zv := float64(m.M[2][0])*v.X + float64(m.M[2][1])*v.Y + float64(m.M[2][2])*v.Z
+
+	r := NewVector3(xv, yv, zv)
+
+	return &r
+}
+
 func (m *Matrix4x4) IsIdentity() bool {
 	return m.M[0][0] == 1.0 && m.M[0][1] == 0.0 && m.M[0][2] == 0.0 && m.M[0][3] == 0.0 &&
 		m.M[1][0] == 0.0 && m.M[1][1] == 1.0 && m.M[1][2] == 0.0 && m.M[1][3] == 0.0 &&

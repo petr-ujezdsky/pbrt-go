@@ -48,7 +48,7 @@ func TestTransform_NewTransformTranslate(t *testing.T) {
 	tr := NewTransformTranslate(&delta)
 
 	p := NewPoint3(1, 2, 3)
-	res := tr.Apply(&p)
+	res := tr.ApplyP(&p)
 
 	assert.Equal(t, NewPoint3(6, 8, 10), *res)
 }
@@ -57,7 +57,7 @@ func TestTransform_NewTransformScale(t *testing.T) {
 	tr := NewTransformScale(2, 3, 4)
 
 	p := NewPoint3(1, 2, 3)
-	res := tr.Apply(&p)
+	res := tr.ApplyP(&p)
 
 	assert.Equal(t, NewPoint3(2, 6, 12), *res)
 }
@@ -100,4 +100,18 @@ func TestTransform_IsIdentity(t *testing.T) {
 	tr := NewTransformEmpty()
 
 	assert.True(t, tr.IsIdentity())
+}
+
+func TestTransform_HasScale(t *testing.T) {
+	var tr = NewTransformEmpty()
+	assert.False(t, tr.HasScale())
+
+	tr = NewTransformTranslate(&Vector3{1, 2, 3})
+	assert.False(t, tr.HasScale())
+
+	tr = NewTransformScale(1, 1, 1)
+	assert.False(t, tr.HasScale())
+
+	tr = NewTransformScale(2, 2, 2)
+	assert.True(t, tr.HasScale())
 }
