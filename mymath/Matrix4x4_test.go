@@ -104,3 +104,49 @@ func TestMatrix4x4_Multiply(t *testing.T) {
 
 	assert.Equal(t, expected, *res)
 }
+
+// data from https://docs.microsoft.com/en-us/archive/msdn-magazine/2016/july/test-run-matrix-inversion-using-csharp
+func TestMatrix4x4_Inverse(t *testing.T) {
+	m := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	res := m.Inverse()
+
+	// original data from web
+	// expected := mymath.NewMatrix4x4All(
+	// 	0.097, -0.183, -0.115, 0.224,
+	// 	-0.019, 0.146, -0.068, 0.010,
+	// 	-0.087, 0.064, 0.103, -0.002,
+	// 	0.204, -0.120, 0.123, -0.147)
+
+	// actual data with minor floating point errors
+	expected := mymath.NewMatrix4x4All(
+		0.09708738, -0.18270081, -0.11473962, 0.22418359,
+		-0.019417476, 0.14563109, -0.06796117, 0.009708739,
+		-0.08737864, 0.06443072, 0.10326566, -0.0017652243,
+		0.20388348, -0.1200353, 0.12268313, -0.1473963)
+
+	assert.Equal(t, expected, *res)
+}
+
+// try to create identity matrix by M*M'
+func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
+	m := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	res := m.Multiply(m.Inverse())
+
+	expected := mymath.NewMatrix4x4All(
+		0.99999994, 1.1920929e-07, -5.9604645e-08, 0,
+		-2.9802322e-08, 1.0000002, -7.4505806e-08, 2.9802322e-08,
+		0, 2.9802322e-08, 0.9999999, 0,
+		-4.4703484e-08, 5.2154064e-08, -3.7252903e-08, 1)
+
+	assert.Equal(t, expected, *res)
+}

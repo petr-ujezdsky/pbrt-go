@@ -1,5 +1,7 @@
 package mymath
 
+import "math"
+
 type Matrix4x4 struct {
 	// arrays of rows of columns
 	M [4][4]float32
@@ -51,4 +53,78 @@ func (m1 *Matrix4x4) Multiply(m2 *Matrix4x4) *Matrix4x4 {
 	}
 
 	return &r
+}
+
+// Numerically stable Gauss–Jordan elimination routine to compute the inverse
+// See https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L82
+func (m *Matrix4x4) Inverse() *Matrix4x4 {
+	var indxc, indxr [4]int
+	ipiv := [4]int{0, 0, 0, 0}
+	// copy matrix arrays
+	minv := m.M
+
+	for i := range minv {
+		irow := 0
+		icol := 0
+		big := 0.0
+		// Choose pivot
+		for j := range ipiv {
+			if ipiv[j] != 1 {
+				for k := range ipiv {
+					if ipiv[k] == 0 {
+						if math.Abs(float64(minv[j][k])) >= big {
+							big = math.Abs(float64(minv[j][k]))
+							irow = j
+							icol = k
+						}
+					} else if ipiv[k] > 1 {
+						// TODO throw error
+						// Error("Singular matrix in MatrixInvert")
+					}
+				}
+			}
+		}
+		ipiv[icol]++
+		// Swap rows _irow_ and _icol_ for pivot
+		if irow != icol {
+			for k := 0; k < 4; k++ {
+				// swap
+				minv[irow][k], minv[icol][k] = minv[icol][k], minv[irow][k]
+			}
+		}
+		indxr[i] = irow
+		indxc[i] = icol
+		if minv[icol][icol] == 0.0 {
+			// TODO throw error
+			// Error("Singular matrix in MatrixInvert");
+		}
+
+		// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
+		pivinv := 1.0 / minv[icol][icol]
+		minv[icol][icol] = 1.
+		for j := 0; j < 4; j++ {
+			minv[icol][j] *= pivinv
+		}
+
+		// Subtract this row from others to zero out their columns
+		for j := 0; j < 4; j++ {
+			if j != icol {
+				save := minv[j][icol]
+				minv[j][icol] = 0
+				for k := 0; k < 4; k++ {
+					minv[j][k] -= minv[icol][k] * save
+				}
+			}
+		}
+	}
+	// Swap columns to reflect permutation
+	for j := 3; j >= 0; j-- {
+		if indxr[j] != indxc[j] {
+			for k := 0; k < 4; k++ {
+				// swap
+				minv[k][indxr[j]], minv[k][indxc[j]] = minv[k][indxc[j]], minv[k][indxr[j]]
+			}
+		}
+	}
+	return &Matrix4x4{minv}
 }
