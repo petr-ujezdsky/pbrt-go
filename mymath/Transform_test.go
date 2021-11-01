@@ -20,12 +20,14 @@ func TestTransform_NewTransform(t *testing.T) {
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	tr := NewTransform(&m)
+	tr, err := NewTransform(&m)
+	assert.Nil(t, err)
 
-	mInv := *m.Inverse()
+	mInv, err := m.Inverse()
 
+	assert.Nil(t, err)
 	assert.Equal(t, m, tr.m)
-	assert.Equal(t, mInv, tr.mInv)
+	assert.Equal(t, *mInv, tr.mInv)
 }
 
 func TestTransform_NewTransformFull(t *testing.T) {
@@ -35,12 +37,13 @@ func TestTransform_NewTransformFull(t *testing.T) {
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	mInv := *m.Inverse()
+	mInv, err := m.Inverse()
 
-	tr := NewTransformFull(&m, &mInv)
+	tr := NewTransformFull(&m, mInv)
 
+	assert.Nil(t, err)
 	assert.Equal(t, m, tr.m)
-	assert.Equal(t, mInv, tr.mInv)
+	assert.Equal(t, *mInv, tr.mInv)
 }
 
 func TestTransform_NewTransformTranslate(t *testing.T) {
@@ -69,13 +72,15 @@ func TestTransform_Inverse(t *testing.T) {
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	var tr = NewTransform(&m)
+	tr, err := NewTransform(&m)
+	assert.Nil(t, err)
 
 	tr = tr.Inverse()
 
-	mInv := *m.Inverse()
+	mInv, err := m.Inverse()
 
-	assert.Equal(t, mInv, tr.m)
+	assert.Nil(t, err)
+	assert.Equal(t, *mInv, tr.m)
 	assert.Equal(t, m, tr.mInv)
 }
 
@@ -86,12 +91,14 @@ func TestTransform_Transpose(t *testing.T) {
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	var tr = NewTransform(&m)
+	tr, err := NewTransform(&m)
+	assert.Nil(t, err)
 
 	tr = tr.Transpose()
 
-	mInv := *m.Inverse()
+	mInv, err := m.Inverse()
 
+	assert.Nil(t, err)
 	assert.Equal(t, *m.Transpose(), tr.m)
 	assert.Equal(t, *mInv.Transpose(), tr.mInv)
 }

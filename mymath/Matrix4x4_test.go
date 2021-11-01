@@ -164,7 +164,7 @@ func TestMatrix4x4_Inverse(t *testing.T) {
 		2.0, 1.0, 9.0, 3.0,
 		5.0, 4.0, 7.0, 1.0)
 
-	res := m.Inverse()
+	res, err := m.Inverse()
 
 	// original data from web
 	// expected := mymath.NewMatrix4x4All(
@@ -180,6 +180,7 @@ func TestMatrix4x4_Inverse(t *testing.T) {
 		-0.08737864, 0.06443072, 0.10326566, -0.0017652243,
 		0.20388348, -0.1200353, 0.12268313, -0.1473963)
 
+	assert.Nil(t, err)
 	assert.Equal(t, expected, *res)
 }
 
@@ -191,7 +192,10 @@ func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
 		2.0, 1.0, 9.0, 3.0,
 		5.0, 4.0, 7.0, 1.0)
 
-	res := m.Multiply(m.Inverse())
+	mInv, err := m.Inverse()
+	assert.Nil(t, err)
+
+	res := m.Multiply(mInv)
 
 	expected := mymath.NewMatrix4x4All(
 		0.99999994, 1.1920929e-07, -5.9604645e-08, 0,

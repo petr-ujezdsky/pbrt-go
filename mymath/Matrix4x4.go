@@ -1,6 +1,9 @@
 package mymath
 
-import "math"
+import (
+	"errors"
+	"math"
+)
 
 type Matrix4x4 struct {
 	// arrays of rows of columns
@@ -90,7 +93,7 @@ func (m *Matrix4x4) IsIdentity() bool {
 
 // Numerically stable Gauss–Jordan elimination routine to compute the inverse
 // See https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L82
-func (m *Matrix4x4) Inverse() *Matrix4x4 {
+func (m *Matrix4x4) Inverse() (*Matrix4x4, error) {
 	var indxc, indxr [4]int
 	ipiv := [4]int{0, 0, 0, 0}
 	// copy matrix arrays
@@ -111,8 +114,7 @@ func (m *Matrix4x4) Inverse() *Matrix4x4 {
 							icol = k
 						}
 					} else if ipiv[k] > 1 {
-						// TODO throw error
-						// Error("Singular matrix in MatrixInvert")
+						return &Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
 					}
 				}
 			}
@@ -128,8 +130,7 @@ func (m *Matrix4x4) Inverse() *Matrix4x4 {
 		indxr[i] = irow
 		indxc[i] = icol
 		if minv[icol][icol] == 0.0 {
-			// TODO throw error
-			// Error("Singular matrix in MatrixInvert");
+			return &Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
 		}
 
 		// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
@@ -159,5 +160,5 @@ func (m *Matrix4x4) Inverse() *Matrix4x4 {
 			}
 		}
 	}
-	return &Matrix4x4{minv}
+	return &Matrix4x4{minv}, nil
 }

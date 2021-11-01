@@ -8,8 +8,13 @@ func NewTransformEmpty() Transform {
 	return Transform{Identity(), Identity()}
 }
 
-func NewTransform(m *Matrix4x4) Transform {
-	return Transform{*m, *m.Inverse()}
+func NewTransform(m *Matrix4x4) (Transform, error) {
+	mInv, err := m.Inverse()
+	if err != nil {
+		return Transform{}, err
+	}
+
+	return Transform{*m, *mInv}, nil
 }
 
 func NewTransformFull(m *Matrix4x4, mInv *Matrix4x4) Transform {
