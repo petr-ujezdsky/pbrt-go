@@ -31,6 +31,21 @@ func NewTransformTranslate(delta *Vector3) Transform {
 	}
 }
 
+func NewTransformScale(x, y, z float32) Transform {
+	return Transform{
+		NewMatrix4x4All(
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1),
+		NewMatrix4x4All(
+			1/x, 0, 0, 0,
+			0, 1/y, 0, 0,
+			0, 0, 1/z, 0,
+			0, 0, 0, 1),
+	}
+}
+
 func (t *Transform) Apply(p *Point3) *Point3 {
 	return t.m.MultiplyP(p)
 }
