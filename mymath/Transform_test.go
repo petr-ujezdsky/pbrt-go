@@ -43,6 +43,16 @@ func TestTransform_NewTransformFull(t *testing.T) {
 	assert.Equal(t, mInv, tr.mInv)
 }
 
+func TestTransform_NewTransformTranslate(t *testing.T) {
+	delta := NewVector3(5, 6, 7)
+	tr := NewTransformTranslate(&delta)
+
+	p := NewPoint3(1, 2, 3)
+	res := tr.Apply(&p)
+
+	assert.Equal(t, NewPoint3(6, 8, 10), *res)
+}
+
 func TestTransform_Inverse(t *testing.T) {
 	m := NewMatrix4x4All(
 		5, 2, 8, 3,

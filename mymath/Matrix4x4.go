@@ -55,6 +55,22 @@ func (m1 *Matrix4x4) Multiply(m2 *Matrix4x4) *Matrix4x4 {
 	return &r
 }
 
+func (m *Matrix4x4) MultiplyP(p *Point3) *Point3 {
+	xp := float64(m.M[0][0])*p.X + float64(m.M[0][1])*p.Y + float64(m.M[0][2])*p.Z + float64(m.M[0][3])
+	yp := float64(m.M[1][0])*p.X + float64(m.M[1][1])*p.Y + float64(m.M[1][2])*p.Z + float64(m.M[1][3])
+	zp := float64(m.M[2][0])*p.X + float64(m.M[2][1])*p.Y + float64(m.M[2][2])*p.Z + float64(m.M[2][3])
+	wp := float64(m.M[3][0])*p.X + float64(m.M[3][1])*p.Y + float64(m.M[3][2])*p.Z + float64(m.M[3][3])
+
+	var r Point3
+
+	if wp == 1 {
+		r = NewPoint3(xp, yp, zp)
+	}
+	r = NewPoint3(xp/wp, yp/wp, zp/wp)
+
+	return &r
+}
+
 func (m *Matrix4x4) IsIdentity() bool {
 	return m.M[0][0] == 1.0 && m.M[0][1] == 0.0 && m.M[0][2] == 0.0 && m.M[0][3] == 0.0 &&
 		m.M[1][0] == 0.0 && m.M[1][1] == 1.0 && m.M[1][2] == 0.0 && m.M[1][3] == 0.0 &&

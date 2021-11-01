@@ -105,6 +105,22 @@ func TestMatrix4x4_Multiply(t *testing.T) {
 	assert.Equal(t, expected, *res)
 }
 
+func TestMatrix4x4_MultiplyP(t *testing.T) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 0,
+		7, 3, 5, 0,
+		9, 3, 2, 0,
+		0, 0, 0, 1)
+
+	p := mymath.NewPoint3(1, 2, 3)
+
+	res := m.MultiplyP(&p)
+
+	expected := mymath.NewPoint3(33, 28, 21)
+
+	assert.Equal(t, expected, *res)
+}
+
 func TestMatrix4x4_IsIdentity(t *testing.T) {
 	var m mymath.Matrix4x4
 	m = mymath.NewMatrix4x4All(
