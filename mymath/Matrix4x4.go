@@ -55,6 +55,13 @@ func (m1 *Matrix4x4) Multiply(m2 *Matrix4x4) *Matrix4x4 {
 	return &r
 }
 
+func (m *Matrix4x4) IsIdentity() bool {
+	return m.M[0][0] == 1.0 && m.M[0][1] == 0.0 && m.M[0][2] == 0.0 && m.M[0][3] == 0.0 &&
+		m.M[1][0] == 0.0 && m.M[1][1] == 1.0 && m.M[1][2] == 0.0 && m.M[1][3] == 0.0 &&
+		m.M[2][0] == 0.0 && m.M[2][1] == 0.0 && m.M[2][2] == 1.0 && m.M[2][3] == 0.0 &&
+		m.M[3][0] == 0.0 && m.M[3][1] == 0.0 && m.M[3][2] == 0.0 && m.M[3][3] == 1.0
+}
+
 // Numerically stable Gauss–Jordan elimination routine to compute the inverse
 // See https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L82
 func (m *Matrix4x4) Inverse() *Matrix4x4 {

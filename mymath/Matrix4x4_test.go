@@ -105,6 +105,25 @@ func TestMatrix4x4_Multiply(t *testing.T) {
 	assert.Equal(t, expected, *res)
 }
 
+func TestMatrix4x4_IsIdentity(t *testing.T) {
+	var m mymath.Matrix4x4
+	m = mymath.NewMatrix4x4All(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1)
+
+	assert.True(t, m.IsIdentity())
+
+	m = mymath.NewMatrix4x4All(
+		5, 2, 8, 3,
+		7, 3, 5, 3,
+		9, 3, 2, 4,
+		1, 8, 3, 8)
+
+	assert.False(t, m.IsIdentity())
+}
+
 // data from https://docs.microsoft.com/en-us/archive/msdn-magazine/2016/july/test-run-matrix-inversion-using-csharp
 func TestMatrix4x4_Inverse(t *testing.T) {
 	m := mymath.NewMatrix4x4All(
@@ -149,4 +168,18 @@ func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
 		-4.4703484e-08, 5.2154064e-08, -3.7252903e-08, 1)
 
 	assert.Equal(t, expected, *res)
+}
+
+func BenchmarkMatrix4x4_IsIdentity(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		m.IsIdentity()
+	}
 }
