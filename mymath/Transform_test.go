@@ -417,6 +417,28 @@ func BenchmarkTransform_ApplyR(b *testing.B) {
 	assert.NotNil(b, res)
 }
 
+func BenchmarkTransform_ApplyRD(b *testing.B) {
+	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	r := NewRay(
+		NewPoint3(0, 0, 0),
+		NewVector3(0, 0, 1),
+		99,
+		0,
+		material.Medium{})
+
+	rd := NewRayDifferentialRay(r)
+
+	var res RayDifferential
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = t.ApplyRD(rd)
+	}
+
+	assert.NotNil(b, res)
+}
+
 func BenchmarkTransform_Inverse(b *testing.B) {
 	t := NewTransformTranslate(NewVector3(1, 2, 3))
 

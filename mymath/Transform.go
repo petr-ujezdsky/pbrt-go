@@ -224,6 +224,19 @@ func (t Transform) ApplyR(r Ray) Ray {
 	return NewRay(o, d, tMax, r.Time, r.Medium)
 }
 
+func (t Transform) ApplyRD(r RayDifferential) RayDifferential {
+	tr := t.ApplyR(r.Ray)
+	ret := NewRayDifferentialRay(tr)
+
+	ret.HasDifferentials = r.HasDifferentials
+	ret.RxOrigin = t.ApplyP(r.RxOrigin)
+	ret.RyOrigin = t.ApplyP(r.RyOrigin)
+	ret.RxDirection = t.ApplyV(r.RxDirection)
+	ret.RyDirection = t.ApplyV(r.RyDirection)
+
+	return ret
+}
+
 func (t Transform) Inverse() Transform {
 	return Transform{t.mInv, t.m}
 }
