@@ -122,6 +122,8 @@ func NewTransformRotate(theta float64, axis Vector3) Transform {
 	m.M[2][2] = float32(a.Z*a.Z + (1-a.Z*a.Z)*cosTheta)
 	m.M[2][3] = 0
 
+	m.M[3][3] = 1
+
 	return Transform{m, m.Transpose()}
 }
 
