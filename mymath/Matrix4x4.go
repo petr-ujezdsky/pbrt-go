@@ -76,7 +76,7 @@ func (m Matrix4x4) MultiplyV(v Vector3) Vector3 {
 	return NewVector3(xv, yv, zv)
 }
 
-func (m Matrix4x4) MultiplyN(n Vector3) Vector3 {
+func (m Matrix4x4) MultiplyN(n Normal3) Vector3 {
 	xv := float64(m.M[0][0])*n.X + float64(m.M[1][0])*n.Y + float64(m.M[2][0])*n.Z
 	yv := float64(m.M[0][1])*n.X + float64(m.M[1][1])*n.Y + float64(m.M[2][1])*n.Z
 	zv := float64(m.M[0][2])*n.X + float64(m.M[1][2])*n.Y + float64(m.M[2][2])*n.Z

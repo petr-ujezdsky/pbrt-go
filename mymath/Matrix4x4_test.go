@@ -144,7 +144,7 @@ func TestMatrix4x4_MultiplyN(t *testing.T) {
 		9, 3, 2, 0,
 		0, 0, 0, 1)
 
-	n := mymath.NewVector3(0, 1, 0)
+	n := mymath.NewNormal3(0, 1, 0)
 
 	res := m.MultiplyN(n)
 
@@ -342,7 +342,7 @@ func BenchmarkMatrix4x4_MultiplyN(b *testing.B) {
 		9, 3, 2, 0,
 		0, 0, 0, 1)
 
-	n := mymath.NewVector3(0, 1, 0)
+	n := mymath.NewNormal3(0, 1, 0)
 
 	var res mymath.Vector3
 

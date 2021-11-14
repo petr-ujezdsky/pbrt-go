@@ -383,7 +383,7 @@ func BenchmarkTransform_ApplyV(b *testing.B) {
 
 func BenchmarkTransform_ApplyN(b *testing.B) {
 	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	n := NewVector3(0, 1, 0)
+	n := NewNormal3(0, 1, 0)
 
 	var res Vector3
 
