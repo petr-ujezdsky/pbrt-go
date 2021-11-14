@@ -174,3 +174,256 @@ func TestVector3_Permute(t *testing.T) {
 	assert.Equal(t, 1.0, res.Y)
 	assert.Equal(t, 8.0, res.Z)
 }
+
+func BenchmarkVector3_LengthSq(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.LengthSq()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Length(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.Length()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Add(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Add(v)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Subtract(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Subtract(v)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Multiply(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Multiply(1.0000003)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Divide(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Divide(1.0000003)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Negate(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Negate()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Abs(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Abs()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Normalize(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Normalize()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Dot(b *testing.B) {
+	v1 := mymath.NewVector3(1, 2, 3)
+	v2 := mymath.NewVector3(4, 5, 6)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v1.Dot(v2)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Cross(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Cross(v)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Get(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.Get(0)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_GetMinComponent(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.GetMinComponent()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_GetMaxComponent(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.GetMaxComponent()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_GetMaxDimension(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res float64
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.GetMaxComponent()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Min(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.Min(res)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Max(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = v.Max(res)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkVector3_Permute(b *testing.B) {
+	v := mymath.NewVector3(1, 2, 3)
+
+	res := v
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = res.Permute(2, 0, 1)
+	}
+
+	assert.NotNil(b, res)
+}
