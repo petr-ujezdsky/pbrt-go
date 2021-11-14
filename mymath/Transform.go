@@ -1,5 +1,7 @@
 package mymath
 
+import "math"
+
 type Transform struct {
 	m, mInv Matrix4x4
 }
@@ -51,6 +53,45 @@ func NewTransformScale(x, y, z float32) Transform {
 			0, 0, 1/z, 0,
 			0, 0, 0, 1),
 	}
+}
+
+func NewTransformRotateX(theta float32) Transform {
+	sinTheta := float32(math.Sin(float64(theta)))
+	cosTheta := float32(math.Cos(float64(theta)))
+
+	m := NewMatrix4x4All(
+		1, 0, 0, 0,
+		0, cosTheta, -sinTheta, 0,
+		0, sinTheta, cosTheta, 0,
+		0, 0, 0, 1)
+
+	return Transform{m, m.Transpose()}
+}
+
+func NewTransformRotateY(theta float32) Transform {
+	sinTheta := float32(math.Sin(float64(theta)))
+	cosTheta := float32(math.Cos(float64(theta)))
+
+	m := NewMatrix4x4All(
+		cosTheta, 0, sinTheta, 0,
+		0, 1, 0, 0,
+		-sinTheta, 0, cosTheta, 0,
+		0, 0, 0, 1)
+
+	return Transform{m, m.Transpose()}
+}
+
+func NewTransformRotateZ(theta float32) Transform {
+	sinTheta := float32(math.Sin(float64(theta)))
+	cosTheta := float32(math.Cos(float64(theta)))
+
+	m := NewMatrix4x4All(
+		cosTheta, -sinTheta, 0, 0,
+		sinTheta, cosTheta, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1)
+
+	return Transform{m, m.Transpose()}
 }
 
 func (t Transform) ApplyP(p Point3) Point3 {

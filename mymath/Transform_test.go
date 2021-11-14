@@ -1,6 +1,7 @@
 package mymath
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -63,6 +64,39 @@ func TestTransform_NewTransformScale(t *testing.T) {
 	res := tr.ApplyP(p)
 
 	assert.Equal(t, NewPoint3(2, 6, 12), res)
+}
+
+func TestTransform_RotateX(t *testing.T) {
+	// rotate 90 degrees along X axis
+	tr := NewTransformRotateX(math.Pi / 2)
+
+	p := NewPoint3(10, 2, 3)
+	res := tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(10, -3, 2), res)
+	assert.Equal(t, NewPoint3(10, -3.0000000874227766, 1.9999998688658351), res)
+}
+
+func TestTransform_RotateY(t *testing.T) {
+	// rotate 90 degrees along Y axis
+	tr := NewTransformRotateY(math.Pi / 2)
+
+	p := NewPoint3(1, 20, 3)
+	res := tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(3, 20, -1), res)
+	assert.Equal(t, NewPoint3(2.9999999562886117, 20, -1.0000001311341649), res)
+}
+
+func TestTransform_RotateZ(t *testing.T) {
+	// rotate 90 degrees along Z axis
+	tr := NewTransformRotateZ(math.Pi / 2)
+
+	p := NewPoint3(1, 2, 30)
+	res := tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, NewPoint3(-2.0000000437113883, 0.9999999125772234, 30), res)
 }
 
 func TestTransform_Inverse(t *testing.T) {
@@ -197,6 +231,45 @@ func BenchmarkTransform_NewTransformScale(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = NewTransformScale(1, 2, 3)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_NewTransformRotateX(b *testing.B) {
+	theta := float32(math.Pi / 2)
+	var res Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = NewTransformRotateX(theta)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_NewTransformRotateY(b *testing.B) {
+	theta := float32(math.Pi / 2)
+	var res Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = NewTransformRotateY(theta)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_NewTransformRotateZ(b *testing.B) {
+	theta := float32(math.Pi / 2)
+	var res Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = NewTransformRotateZ(theta)
 	}
 
 	assert.NotNil(b, res)
