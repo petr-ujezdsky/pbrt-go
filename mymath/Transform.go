@@ -94,6 +94,34 @@ func NewTransformRotateZ(theta float32) Transform {
 	return Transform{m, m.Transpose()}
 }
 
+func NewTransformRotate(theta float64, axis Vector3) Transform {
+	a := axis.Normalize()
+
+	sinTheta := math.Sin(theta)
+	cosTheta := math.Cos(theta)
+
+	m := Matrix4x4{}
+
+	// Compute rotation of first basis vector
+	m.M[0][0] = float32(a.X*a.X + (1-a.X*a.X)*cosTheta)
+	m.M[0][1] = float32(a.X*a.Y*(1-cosTheta) - a.Z*sinTheta)
+	m.M[0][2] = float32(a.X*a.Z*(1-cosTheta) + a.Y*sinTheta)
+	m.M[0][3] = 0
+
+	// Compute rotations of second and third basis vectors
+	m.M[1][0] = float32(a.X*a.Y*(1-cosTheta) + a.Z*sinTheta)
+	m.M[1][1] = float32(a.Y*a.Y + (1-a.Y*a.Y)*cosTheta)
+	m.M[1][2] = float32(a.Y*a.Z*(1-cosTheta) - a.X*sinTheta)
+	m.M[1][3] = 0
+
+	m.M[2][0] = float32(a.X*a.Z*(1-cosTheta) - a.Y*sinTheta)
+	m.M[2][1] = float32(a.Y*a.Z*(1-cosTheta) + a.X*sinTheta)
+	m.M[2][2] = float32(a.Z*a.Z + (1-a.Z*a.Z)*cosTheta)
+	m.M[2][3] = 0
+
+	return Transform{m, m.Transpose()}
+}
+
 func (t Transform) ApplyP(p Point3) Point3 {
 	return t.m.MultiplyP(p)
 }

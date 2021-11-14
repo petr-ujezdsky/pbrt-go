@@ -99,6 +99,37 @@ func TestTransform_RotateZ(t *testing.T) {
 	assert.Equal(t, NewPoint3(-2.0000000437113883, 0.9999999125772234, 30), res)
 }
 
+func TestTransform_Rotate(t *testing.T) {
+	// X axis
+	var axis = NewVector3(1, 0, 0)
+	var tr = NewTransformRotate(math.Pi/2, axis)
+
+	var p = NewPoint3(10, 2, 3)
+	var res = tr.ApplyP(p)
+
+	assert.Equal(t, NewPoint3(10, -3, 2), res)
+
+	// Y axis
+	axis = NewVector3(0, 1, 0)
+	tr = NewTransformRotate(math.Pi/2, axis)
+
+	p = NewPoint3(1, 20, 3)
+	res = tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(3, 20, -1), res)
+	assert.Equal(t, NewPoint3(3, 20, -0.9999999999999998), res)
+
+	// Z axis
+	axis = NewVector3(0, 0, 1)
+	tr = NewTransformRotate(math.Pi/2, axis)
+
+	p = NewPoint3(1, 2, 30)
+	res = tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, NewPoint3(-2, 1.0000000000000002, 30), res)
+}
+
 func TestTransform_Inverse(t *testing.T) {
 	m := NewMatrix4x4All(
 		5, 2, 8, 3,
@@ -270,6 +301,20 @@ func BenchmarkTransform_NewTransformRotateZ(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = NewTransformRotateZ(theta)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_NewTransformRotate(b *testing.B) {
+	axis := NewVector3(1, 2, 3)
+	theta := math.Pi / 2
+	var res Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = NewTransformRotate(theta, axis)
 	}
 
 	assert.NotNil(b, res)
