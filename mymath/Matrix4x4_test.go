@@ -1,7 +1,6 @@
 package mymath_test
 
 import (
-	"fmt"
 	"pbrt-go/mymath"
 	"testing"
 
@@ -222,7 +221,7 @@ func BenchmarkMatrix4x4_Transpose(b *testing.B) {
 		res = m1.Transpose()
 	}
 
-	fmt.Println(res)
+	assert.NotNil(b, res)
 }
 
 func BenchmarkMatrix4x4_Multiply(b *testing.B) {
@@ -246,7 +245,7 @@ func BenchmarkMatrix4x4_Multiply(b *testing.B) {
 		res = m1.Multiply(m2)
 	}
 
-	fmt.Println(res)
+	assert.NotNil(b, res)
 }
 
 func BenchmarkMatrix4x4_MultiplyP(b *testing.B) {
@@ -266,7 +265,7 @@ func BenchmarkMatrix4x4_MultiplyP(b *testing.B) {
 		res = m.MultiplyP(p)
 	}
 
-	fmt.Println(res)
+	assert.NotNil(b, res)
 }
 
 func BenchmarkMatrix4x4_MultiplyV(b *testing.B) {
@@ -286,7 +285,7 @@ func BenchmarkMatrix4x4_MultiplyV(b *testing.B) {
 		res = m.MultiplyV(v)
 	}
 
-	fmt.Println(res)
+	assert.NotNil(b, res)
 }
 
 func BenchmarkMatrix4x4_IsIdentity(b *testing.B) {
@@ -296,11 +295,15 @@ func BenchmarkMatrix4x4_IsIdentity(b *testing.B) {
 		0, 0, 1, 0,
 		0, 0, 0, 1)
 
+	var res bool
+
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		m.IsIdentity()
 	}
+
+	assert.NotNil(b, res)
 }
 
 func BenchmarkMatrix4x4_Inverse(b *testing.B) {
@@ -318,5 +321,5 @@ func BenchmarkMatrix4x4_Inverse(b *testing.B) {
 		res, _ = m.Inverse()
 	}
 
-	fmt.Println(res)
+	assert.NotNil(b, res)
 }
