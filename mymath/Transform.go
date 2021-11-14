@@ -172,10 +172,14 @@ func NewTransformLookAt(pos, look Point3, up Vector3) (Transform, error) {
 	return NewTransformFull(ctwInv, cameraToWorld), nil
 }
 
+// Applies transformation to Point
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L222
 func (t Transform) ApplyP(p Point3) Point3 {
 	return t.m.MultiplyP(p)
 }
 
+// Applies transformation to Point, also returns error vector
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L278
 func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
 	pt := t.m.MultiplyP(p)
 
@@ -200,14 +204,20 @@ func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
 	return pt, pError
 }
 
+// Applies transformation to Vector
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L236
 func (t Transform) ApplyV(v Vector3) Vector3 {
 	return t.m.MultiplyV(v)
 }
 
+// Applies transformation to Normal
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L244
 func (t Transform) ApplyN(n Normal3) Vector3 {
 	return t.m.MultiplyN(n)
 }
 
+// Applies transformation to Ray
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L251
 func (t Transform) ApplyR(r Ray) Ray {
 	o, oError := t.ApplyPError(r.O)
 	d := t.ApplyV(r.D)
@@ -224,6 +234,8 @@ func (t Transform) ApplyR(r Ray) Ray {
 	return NewRay(o, d, tMax, r.Time, r.Medium)
 }
 
+// Applies transformation to RayDifferential
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L266
 func (t Transform) ApplyRD(r RayDifferential) RayDifferential {
 	tr := t.ApplyR(r.Ray)
 	ret := NewRayDifferentialRay(tr)
@@ -237,6 +249,8 @@ func (t Transform) ApplyRD(r RayDifferential) RayDifferential {
 	return ret
 }
 
+// Applies transformation to Bounds3
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L238
 func (t Transform) ApplyB(b Bounds3) Bounds3 {
 	ret := NewBounds3P(t.ApplyP(b.PMin))
 
