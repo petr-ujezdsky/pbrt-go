@@ -272,6 +272,15 @@ func (t Transform) ApplyB(b Bounds3) Bounds3 {
 	return ret
 }
 
+// Applies transformation to transformation
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L251
+func (t1 Transform) ApplyT(t2 Transform) Transform {
+	return Transform{
+		t1.m.Multiply(t2.m),
+		t2.mInv.Multiply(t1.mInv)}
+}
+
 func (t Transform) Inverse() Transform {
 	return Transform{t.mInv, t.m}
 }
