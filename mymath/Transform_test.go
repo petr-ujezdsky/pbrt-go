@@ -130,6 +130,21 @@ func TestTransform_Rotate(t *testing.T) {
 	assert.Equal(t, NewPoint3(-2, 1.0000000000000002, 30), res)
 }
 
+func TestTransform_NewTransformLookAt(t *testing.T) {
+	pos := NewPoint3(0, 0, 0)
+	look := NewPoint3(0, 0, 10)
+	up := NewVector3(10, 0, 0)
+
+	tr, err := NewTransformLookAt(pos, look, up)
+
+	assert.Nil(t, err)
+
+	p := NewPoint3(1, 2, 30)
+	res := tr.ApplyP(p)
+
+	assert.Equal(t, NewPoint3(-2, 1, 30), res)
+}
+
 func TestTransform_Inverse(t *testing.T) {
 	m := NewMatrix4x4All(
 		5, 2, 8, 3,
@@ -318,6 +333,22 @@ func BenchmarkTransform_NewTransformRotate(b *testing.B) {
 	}
 
 	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_NewTransformLookAt(b *testing.B) {
+	pos := NewPoint3(0, 0, 0)
+	look := NewPoint3(0, 0, 10)
+	up := NewVector3(10, 0, 0)
+
+	var tr Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		tr, _ = NewTransformLookAt(pos, look, up)
+	}
+
+	assert.NotNil(b, tr)
 }
 
 func BenchmarkTransform_ApplyP(b *testing.B) {

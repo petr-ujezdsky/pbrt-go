@@ -1,6 +1,9 @@
 package mymath
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 type Transform struct {
 	m, mInv Matrix4x4
@@ -120,6 +123,51 @@ func NewTransformRotate(theta float64, axis Vector3) Transform {
 	m.M[2][3] = 0
 
 	return Transform{m, m.Transpose()}
+}
+
+func NewTransformLookAt(pos, look Point3, up Vector3) (Transform, error) {
+	cameraToWorld := Matrix4x4{}
+
+	// Initialize fourth column of viewing matrix
+	cameraToWorld.M[0][3] = float32(pos.X)
+	cameraToWorld.M[1][3] = float32(pos.Y)
+	cameraToWorld.M[2][3] = float32(pos.Z)
+	cameraToWorld.M[3][3] = 1
+
+	// Initialize first three columns of viewing matrix
+	dir := look.SubtractP(pos).Normalize()
+	rightNotNormalized := up.Normalize().Cross(dir)
+	if rightNotNormalized.Length() == 0 {
+		err := fmt.Errorf(
+			"\"up\" vector (%v) and viewing direction (%v) "+
+				"passed to LookAt are pointing in the same direction.  Using "+
+				"the identity transformation",
+			up, dir)
+		return NewTransformEmpty(), err
+	}
+
+	right := rightNotNormalized.Normalize()
+	newUp := dir.Cross(right)
+
+	cameraToWorld.M[0][0] = float32(right.X)
+	cameraToWorld.M[1][0] = float32(right.Y)
+	cameraToWorld.M[2][0] = float32(right.Z)
+	cameraToWorld.M[3][0] = 0
+	cameraToWorld.M[0][1] = float32(newUp.X)
+	cameraToWorld.M[1][1] = float32(newUp.Y)
+	cameraToWorld.M[2][1] = float32(newUp.Z)
+	cameraToWorld.M[3][1] = 0
+	cameraToWorld.M[0][2] = float32(dir.X)
+	cameraToWorld.M[1][2] = float32(dir.Y)
+	cameraToWorld.M[2][2] = float32(dir.Z)
+	cameraToWorld.M[3][2] = 0
+
+	ctwInv, err := cameraToWorld.Inverse()
+	if err != nil {
+		return NewTransformEmpty(), err
+	}
+
+	return NewTransformFull(ctwInv, cameraToWorld), nil
 }
 
 func (t Transform) ApplyP(p Point3) Point3 {
