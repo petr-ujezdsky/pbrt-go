@@ -237,6 +237,20 @@ func (t Transform) ApplyRD(r RayDifferential) RayDifferential {
 	return ret
 }
 
+func (t Transform) ApplyB(b Bounds3) Bounds3 {
+	ret := NewBounds3P(t.ApplyP(b.PMin))
+
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMax.X, b.PMin.Y, b.PMin.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMin.X, b.PMax.Y, b.PMin.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMin.X, b.PMin.Y, b.PMax.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMin.X, b.PMax.Y, b.PMax.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMax.X, b.PMax.Y, b.PMin.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMax.X, b.PMin.Y, b.PMax.Z)))
+	ret = ret.UnionP(t.ApplyP(NewPoint3(b.PMax.X, b.PMax.Y, b.PMax.Z)))
+
+	return ret
+}
+
 func (t Transform) Inverse() Transform {
 	return Transform{t.mInv, t.m}
 }

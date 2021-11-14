@@ -146,6 +146,22 @@ func TestTransform_NewTransformLookAt(t *testing.T) {
 	assert.Equal(t, NewPoint3(-2, 1, 30), res)
 }
 
+func TestTransform_ApplyB(t *testing.T) {
+	tr := NewTransformTranslate(NewVector3(1, 2, 3))
+
+	bounds := NewBounds3(
+		NewPoint3(0, 0, 0),
+		NewPoint3(1, 1, 1))
+
+	res := tr.ApplyB(bounds)
+
+	expected := NewBounds3(
+		NewPoint3(1, 2, 3),
+		NewPoint3(2, 3, 4))
+
+	assert.Equal(t, expected, res)
+}
+
 func TestTransform_Inverse(t *testing.T) {
 	m := NewMatrix4x4All(
 		5, 2, 8, 3,
@@ -434,6 +450,23 @@ func BenchmarkTransform_ApplyRD(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = t.ApplyRD(rd)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_ApplyB(b *testing.B) {
+	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	bounds := NewBounds3(
+		NewPoint3(0, 0, 0),
+		NewPoint3(1, 1, 1))
+
+	var res Bounds3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = t.ApplyB(bounds)
 	}
 
 	assert.NotNil(b, res)
