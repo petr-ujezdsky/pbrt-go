@@ -137,6 +137,22 @@ func TestMatrix4x4_MultiplyV(t *testing.T) {
 	assert.Equal(t, expected, res)
 }
 
+func TestMatrix4x4_MultiplyN(t *testing.T) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 0,
+		7, 3, 5, 0,
+		9, 3, 2, 0,
+		0, 0, 0, 1)
+
+	n := mymath.NewVector3(0, 1, 0)
+
+	res := m.MultiplyN(n)
+
+	expected := mymath.NewVector3(7, 3, 5)
+
+	assert.Equal(t, expected, res)
+}
+
 func TestMatrix4x4_IsIdentity(t *testing.T) {
 	var m mymath.Matrix4x4
 	m = mymath.NewMatrix4x4All(
@@ -314,6 +330,26 @@ func BenchmarkMatrix4x4_MultiplyV(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = m.MultiplyV(v)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkMatrix4x4_MultiplyN(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 0,
+		7, 3, 5, 0,
+		9, 3, 2, 0,
+		0, 0, 0, 1)
+
+	n := mymath.NewVector3(0, 1, 0)
+
+	var res mymath.Vector3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m.MultiplyN(n)
 	}
 
 	assert.NotNil(b, res)

@@ -381,6 +381,21 @@ func BenchmarkTransform_ApplyV(b *testing.B) {
 	assert.NotNil(b, res)
 }
 
+func BenchmarkTransform_ApplyN(b *testing.B) {
+	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	n := NewVector3(0, 1, 0)
+
+	var res Vector3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = t.ApplyN(n)
+	}
+
+	assert.NotNil(b, res)
+}
+
 func BenchmarkTransform_Inverse(b *testing.B) {
 	t := NewTransformTranslate(NewVector3(1, 2, 3))
 

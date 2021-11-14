@@ -180,6 +180,10 @@ func (t Transform) ApplyV(v Vector3) Vector3 {
 	return t.m.MultiplyV(v)
 }
 
+func (t Transform) ApplyN(n Vector3) Vector3 {
+	return t.m.MultiplyN(n)
+}
+
 func (t Transform) Inverse() Transform {
 	return Transform{t.mInv, t.m}
 }
