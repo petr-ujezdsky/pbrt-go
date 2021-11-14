@@ -176,12 +176,52 @@ func (t Transform) ApplyP(p Point3) Point3 {
 	return t.m.MultiplyP(p)
 }
 
+func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
+	pt := t.m.MultiplyP(p)
+
+	// Compute absolute error for transformed point
+	xAbsSum := math.Abs(float64(t.m.M[0][0])*p.X) +
+		math.Abs(float64(t.m.M[0][1])*p.Y) +
+		math.Abs(float64(t.m.M[0][2])*p.Z) +
+		math.Abs(float64(t.m.M[0][3]))
+
+	yAbsSum := math.Abs(float64(t.m.M[1][0])*p.X) +
+		math.Abs(float64(t.m.M[1][1])*p.Y) +
+		math.Abs(float64(t.m.M[1][2])*p.Z) +
+		math.Abs(float64(t.m.M[1][3]))
+
+	zAbsSum := math.Abs(float64(t.m.M[2][0])*p.X) +
+		math.Abs(float64(t.m.M[2][1])*p.Y) +
+		math.Abs(float64(t.m.M[2][2])*p.Z) +
+		math.Abs(float64(t.m.M[2][3]))
+
+	pError := NewVector3(xAbsSum, yAbsSum, zAbsSum).Multiply(Gamma3)
+
+	return pt, pError
+}
+
 func (t Transform) ApplyV(v Vector3) Vector3 {
 	return t.m.MultiplyV(v)
 }
 
 func (t Transform) ApplyN(n Normal3) Vector3 {
 	return t.m.MultiplyN(n)
+}
+
+func (t Transform) ApplyR(r Ray) Ray {
+	o, oError := t.ApplyPError(r.O)
+	d := t.ApplyV(r.D)
+
+	// Offset ray origin to edge of error bounds and compute _tMax_
+	lengthSquared := d.LengthSq()
+	tMax := r.TMax
+	if lengthSquared > 0 {
+		dt := d.Abs().Dot(oError) / lengthSquared
+		o = o.AddV(d.Multiply(dt))
+		tMax -= dt
+	}
+
+	return NewRay(o, d, tMax, r.Time, r.Medium)
 }
 
 func (t Transform) Inverse() Transform {

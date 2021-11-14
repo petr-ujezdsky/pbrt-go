@@ -2,6 +2,7 @@ package mymath
 
 import (
 	"math"
+	"pbrt-go/material"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -391,6 +392,26 @@ func BenchmarkTransform_ApplyN(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = t.ApplyN(n)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkTransform_ApplyR(b *testing.B) {
+	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	r := NewRay(
+		NewPoint3(0, 0, 0),
+		NewVector3(0, 0, 1),
+		99,
+		0,
+		material.Medium{})
+
+	var res Ray
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = t.ApplyR(r)
 	}
 
 	assert.NotNil(b, res)
