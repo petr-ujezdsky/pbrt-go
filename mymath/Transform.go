@@ -304,3 +304,15 @@ func (t Transform) HasScale() bool {
 
 	return notOne(la2) || notOne(lb2) || notOne(lc2)
 }
+
+// Tells if handedness is changed by a transformation
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L255
+func (t Transform) SwapsHandedness() bool {
+	// upper left 3x3 submatrix determinant
+	det := t.m.M[0][0]*(t.m.M[1][1]*t.m.M[2][2]-t.m.M[1][2]*t.m.M[2][1]) -
+		t.m.M[0][1]*(t.m.M[1][0]*t.m.M[2][2]-t.m.M[1][2]*t.m.M[2][0]) +
+		t.m.M[0][2]*(t.m.M[1][0]*t.m.M[2][1]-t.m.M[1][1]*t.m.M[2][0])
+
+	return det < 0
+}

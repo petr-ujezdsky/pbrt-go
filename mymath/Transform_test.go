@@ -553,3 +553,17 @@ func BenchmarkTransform_HasScale(b *testing.B) {
 
 	assert.NotNil(b, res)
 }
+
+func BenchmarkTransform_SwapsHandedness(b *testing.B) {
+	t := NewTransformTranslate(NewVector3(1, 2, 3))
+
+	var res bool
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = t.SwapsHandedness()
+	}
+
+	assert.NotNil(b, res)
+}
