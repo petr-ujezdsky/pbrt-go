@@ -5,23 +5,25 @@ type Transform struct {
 }
 
 func NewTransformEmpty() Transform {
-	return Transform{Identity(), Identity()}
+	m := Identity()
+
+	return Transform{m, m}
 }
 
-func NewTransform(m *Matrix4x4) (Transform, error) {
+func NewTransform(m Matrix4x4) (Transform, error) {
 	mInv, err := m.Inverse()
 	if err != nil {
 		return Transform{}, err
 	}
 
-	return Transform{*m, mInv}, nil
+	return Transform{m, mInv}, nil
 }
 
-func NewTransformFull(m *Matrix4x4, mInv *Matrix4x4) Transform {
-	return Transform{*m, *mInv}
+func NewTransformFull(m Matrix4x4, mInv Matrix4x4) Transform {
+	return Transform{m, mInv}
 }
 
-func NewTransformTranslate(delta *Vector3) Transform {
+func NewTransformTranslate(delta Vector3) Transform {
 	return Transform{
 		NewMatrix4x4All(
 			1, 0, 0, float32(delta.X),
@@ -51,27 +53,27 @@ func NewTransformScale(x, y, z float32) Transform {
 	}
 }
 
-func (t *Transform) ApplyP(p Point3) Point3 {
+func (t Transform) ApplyP(p Point3) Point3 {
 	return t.m.MultiplyP(p)
 }
 
-func (t *Transform) ApplyV(v Vector3) Vector3 {
+func (t Transform) ApplyV(v Vector3) Vector3 {
 	return t.m.MultiplyV(v)
 }
 
-func (t *Transform) Inverse() Transform {
+func (t Transform) Inverse() Transform {
 	return Transform{t.mInv, t.m}
 }
 
-func (t *Transform) Transpose() Transform {
+func (t Transform) Transpose() Transform {
 	return Transform{t.m.Transpose(), t.mInv.Transpose()}
 }
 
-func (t *Transform) IsIdentity() bool {
+func (t Transform) IsIdentity() bool {
 	return t.m.IsIdentity()
 }
 
-func (t *Transform) HasScale() bool {
+func (t Transform) HasScale() bool {
 	la2 := t.ApplyV(Vector3{1, 0, 0}).LengthSq()
 	lb2 := t.ApplyV(Vector3{0, 1, 0}).LengthSq()
 	lc2 := t.ApplyV(Vector3{0, 0, 1}).LengthSq()
