@@ -31,19 +31,17 @@ func Identity() Matrix4x4 {
 		0, 0, 0, 1)
 }
 
-func (m *Matrix4x4) Transpose() *Matrix4x4 {
+func (m Matrix4x4) Transpose() Matrix4x4 {
 	M := m.M
-	r := NewMatrix4x4All(
+	return NewMatrix4x4All(
 		M[0][0], M[1][0], M[2][0], M[3][0],
 		M[0][1], M[1][1], M[2][1], M[3][1],
 		M[0][2], M[1][2], M[2][2], M[3][2],
 		M[0][3], M[1][3], M[2][3], M[3][3],
 	)
-
-	return &r
 }
 
-func (m1 *Matrix4x4) Multiply(m2 *Matrix4x4) *Matrix4x4 {
+func (m1 Matrix4x4) Multiply(m2 Matrix4x4) Matrix4x4 {
 	r := Matrix4x4{}
 
 	for i := 0; i < 4; i++ {
@@ -55,36 +53,30 @@ func (m1 *Matrix4x4) Multiply(m2 *Matrix4x4) *Matrix4x4 {
 		}
 	}
 
-	return &r
+	return r
 }
 
-func (m *Matrix4x4) MultiplyP(p *Point3) *Point3 {
+func (m Matrix4x4) MultiplyP(p Point3) Point3 {
 	xp := float64(m.M[0][0])*p.X + float64(m.M[0][1])*p.Y + float64(m.M[0][2])*p.Z + float64(m.M[0][3])
 	yp := float64(m.M[1][0])*p.X + float64(m.M[1][1])*p.Y + float64(m.M[1][2])*p.Z + float64(m.M[1][3])
 	zp := float64(m.M[2][0])*p.X + float64(m.M[2][1])*p.Y + float64(m.M[2][2])*p.Z + float64(m.M[2][3])
 	wp := float64(m.M[3][0])*p.X + float64(m.M[3][1])*p.Y + float64(m.M[3][2])*p.Z + float64(m.M[3][3])
 
-	var r Point3
-
 	if wp == 1 {
-		r = NewPoint3(xp, yp, zp)
+		return NewPoint3(xp, yp, zp)
 	}
-	r = NewPoint3(xp/wp, yp/wp, zp/wp)
-
-	return &r
+	return NewPoint3(xp/wp, yp/wp, zp/wp)
 }
 
-func (m *Matrix4x4) MultiplyV(v *Vector3) *Vector3 {
+func (m Matrix4x4) MultiplyV(v Vector3) Vector3 {
 	xv := float64(m.M[0][0])*v.X + float64(m.M[0][1])*v.Y + float64(m.M[0][2])*v.Z
 	yv := float64(m.M[1][0])*v.X + float64(m.M[1][1])*v.Y + float64(m.M[1][2])*v.Z
 	zv := float64(m.M[2][0])*v.X + float64(m.M[2][1])*v.Y + float64(m.M[2][2])*v.Z
 
-	r := NewVector3(xv, yv, zv)
-
-	return &r
+	return NewVector3(xv, yv, zv)
 }
 
-func (m *Matrix4x4) IsIdentity() bool {
+func (m Matrix4x4) IsIdentity() bool {
 	return m.M[0][0] == 1.0 && m.M[0][1] == 0.0 && m.M[0][2] == 0.0 && m.M[0][3] == 0.0 &&
 		m.M[1][0] == 0.0 && m.M[1][1] == 1.0 && m.M[1][2] == 0.0 && m.M[1][3] == 0.0 &&
 		m.M[2][0] == 0.0 && m.M[2][1] == 0.0 && m.M[2][2] == 1.0 && m.M[2][3] == 0.0 &&
@@ -93,7 +85,7 @@ func (m *Matrix4x4) IsIdentity() bool {
 
 // Numerically stable Gauss–Jordan elimination routine to compute the inverse
 // See https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L82
-func (m *Matrix4x4) Inverse() (*Matrix4x4, error) {
+func (m Matrix4x4) Inverse() (Matrix4x4, error) {
 	var indxc, indxr [4]int
 	ipiv := [4]int{0, 0, 0, 0}
 	// copy matrix arrays
@@ -114,7 +106,7 @@ func (m *Matrix4x4) Inverse() (*Matrix4x4, error) {
 							icol = k
 						}
 					} else if ipiv[k] > 1 {
-						return &Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
+						return Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
 					}
 				}
 			}
@@ -130,7 +122,7 @@ func (m *Matrix4x4) Inverse() (*Matrix4x4, error) {
 		indxr[i] = irow
 		indxc[i] = icol
 		if minv[icol][icol] == 0.0 {
-			return &Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
+			return Matrix4x4{}, errors.New("singular matrix in MatrixInvert")
 		}
 
 		// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
@@ -160,5 +152,5 @@ func (m *Matrix4x4) Inverse() (*Matrix4x4, error) {
 			}
 		}
 	}
-	return &Matrix4x4{minv}, nil
+	return Matrix4x4{minv}, nil
 }

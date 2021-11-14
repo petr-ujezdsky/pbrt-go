@@ -1,6 +1,7 @@
 package mymath_test
 
 import (
+	"fmt"
 	"pbrt-go/mymath"
 	"testing"
 
@@ -78,7 +79,7 @@ func TestMatrix4x4_Transpose(t *testing.T) {
 		8, 5, 2, 3,
 		3, 3, 4, 8)
 
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
 }
 
 func TestMatrix4x4_Multiply(t *testing.T) {
@@ -94,7 +95,7 @@ func TestMatrix4x4_Multiply(t *testing.T) {
 		6, 4, 4, 4,
 		7, 9, 2, 1)
 
-	res := m2.Multiply(&m1)
+	res := m2.Multiply(m1)
 
 	expected := mymath.NewMatrix4x4All(
 		162, 84, 96, 96,
@@ -102,7 +103,7 @@ func TestMatrix4x4_Multiply(t *testing.T) {
 		98, 68, 88, 78,
 		117, 55, 108, 64)
 
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
 }
 
 func TestMatrix4x4_MultiplyP(t *testing.T) {
@@ -114,11 +115,11 @@ func TestMatrix4x4_MultiplyP(t *testing.T) {
 
 	p := mymath.NewPoint3(1, 2, 3)
 
-	res := m.MultiplyP(&p)
+	res := m.MultiplyP(p)
 
 	expected := mymath.NewPoint3(33, 28, 21)
 
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
 }
 
 func TestMatrix4x4_MultiplyV(t *testing.T) {
@@ -130,11 +131,11 @@ func TestMatrix4x4_MultiplyV(t *testing.T) {
 
 	v := mymath.NewVector3(1, 2, 3)
 
-	res := m.MultiplyV(&v)
+	res := m.MultiplyV(v)
 
 	expected := mymath.NewVector3(33, 28, 21)
 
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
 }
 
 func TestMatrix4x4_IsIdentity(t *testing.T) {
@@ -181,7 +182,7 @@ func TestMatrix4x4_Inverse(t *testing.T) {
 		0.20388348, -0.1200353, 0.12268313, -0.1473963)
 
 	assert.Nil(t, err)
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
 }
 
 // try to create identity matrix by M*M'
@@ -203,7 +204,89 @@ func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
 		0, 2.9802322e-08, 0.9999999, 0,
 		-4.4703484e-08, 5.2154064e-08, -3.7252903e-08, 1)
 
-	assert.Equal(t, expected, *res)
+	assert.Equal(t, expected, res)
+}
+
+func BenchmarkMatrix4x4_Transpose(b *testing.B) {
+	m1 := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m1.Transpose()
+	}
+
+	fmt.Println(res)
+}
+
+func BenchmarkMatrix4x4_Multiply(b *testing.B) {
+	m1 := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	m2 := mymath.NewMatrix4x4All(
+		5, 2, 8, 3,
+		7, 3, 5, 3,
+		9, 3, 2, 4,
+		1, 8, 3, 8)
+
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m1.Multiply(m2)
+	}
+
+	fmt.Println(res)
+}
+
+func BenchmarkMatrix4x4_MultiplyP(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 0,
+		7, 3, 5, 0,
+		9, 3, 2, 0,
+		0, 0, 0, 1)
+
+	p := mymath.NewPoint3(1, 2, 3)
+
+	var res mymath.Point3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m.MultiplyP(p)
+	}
+
+	fmt.Println(res)
+}
+
+func BenchmarkMatrix4x4_MultiplyV(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 0,
+		7, 3, 5, 0,
+		9, 3, 2, 0,
+		0, 0, 0, 1)
+
+	v := mymath.NewVector3(1, 2, 3)
+
+	var res mymath.Vector3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m.MultiplyV(v)
+	}
+
+	fmt.Println(res)
 }
 
 func BenchmarkMatrix4x4_IsIdentity(b *testing.B) {
@@ -218,4 +301,22 @@ func BenchmarkMatrix4x4_IsIdentity(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		m.IsIdentity()
 	}
+}
+
+func BenchmarkMatrix4x4_Inverse(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = m.Inverse()
+	}
+
+	fmt.Println(res)
 }

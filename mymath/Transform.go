@@ -14,7 +14,7 @@ func NewTransform(m *Matrix4x4) (Transform, error) {
 		return Transform{}, err
 	}
 
-	return Transform{*m, *mInv}, nil
+	return Transform{*m, mInv}, nil
 }
 
 func NewTransformFull(m *Matrix4x4, mInv *Matrix4x4) Transform {
@@ -51,11 +51,11 @@ func NewTransformScale(x, y, z float32) Transform {
 	}
 }
 
-func (t *Transform) ApplyP(p *Point3) *Point3 {
+func (t *Transform) ApplyP(p Point3) Point3 {
 	return t.m.MultiplyP(p)
 }
 
-func (t *Transform) ApplyV(v *Vector3) *Vector3 {
+func (t *Transform) ApplyV(v Vector3) Vector3 {
 	return t.m.MultiplyV(v)
 }
 
@@ -64,7 +64,7 @@ func (t *Transform) Inverse() Transform {
 }
 
 func (t *Transform) Transpose() Transform {
-	return Transform{*t.m.Transpose(), *t.mInv.Transpose()}
+	return Transform{t.m.Transpose(), t.mInv.Transpose()}
 }
 
 func (t *Transform) IsIdentity() bool {
@@ -72,9 +72,9 @@ func (t *Transform) IsIdentity() bool {
 }
 
 func (t *Transform) HasScale() bool {
-	la2 := t.ApplyV(&Vector3{1, 0, 0}).LengthSq()
-	lb2 := t.ApplyV(&Vector3{0, 1, 0}).LengthSq()
-	lc2 := t.ApplyV(&Vector3{0, 0, 1}).LengthSq()
+	la2 := t.ApplyV(Vector3{1, 0, 0}).LengthSq()
+	lb2 := t.ApplyV(Vector3{0, 1, 0}).LengthSq()
+	lc2 := t.ApplyV(Vector3{0, 0, 1}).LengthSq()
 
 	notOne := func(x float64) bool {
 		return x < 0.999 || x > 1.001

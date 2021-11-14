@@ -176,3 +176,7 @@ func TestPoint3_Permute(t *testing.T) {
 	assert.Equal(t, 1.0, res.Y)
 	assert.Equal(t, 8.0, res.Z)
 }
+
+func BenchmarkPoint3_Multiply(b *testing.B) {
+
+}
