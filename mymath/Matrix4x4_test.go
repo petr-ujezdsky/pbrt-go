@@ -206,6 +206,37 @@ func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
 	assert.Equal(t, expected, res)
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// BENCHMARKS ////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+func BenchmarkMatrix4x4_NewMatrix4x4All(b *testing.B) {
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = mymath.NewMatrix4x4All(
+			1, 2, 3, 4,
+			5, 6, 7, 8,
+			9, 1, 2, 3,
+			4, 5, 6, 7)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkMatrix4x4_Identity(b *testing.B) {
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = mymath.Identity()
+	}
+
+	assert.NotNil(b, res)
+}
+
 func BenchmarkMatrix4x4_Transpose(b *testing.B) {
 	m1 := mymath.NewMatrix4x4All(
 		3.0, 7.0, 2.0, 5.0,
