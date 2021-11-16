@@ -1,28 +1,29 @@
-package mymath
+package mymath_test
 
 import (
 	"math"
 	"pbrt-go/material"
+	"pbrt-go/mymath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTransform_NewTransformEmpty(t *testing.T) {
-	tr := NewTransformEmpty()
+	tr := mymath.NewTransformEmpty()
 
-	assert.Equal(t, Identity(), tr.M)
-	assert.Equal(t, Identity(), tr.MInv)
+	assert.Equal(t, mymath.Identity(), tr.M)
+	assert.Equal(t, mymath.Identity(), tr.MInv)
 }
 
 func TestTransform_NewTransform(t *testing.T) {
-	m := NewMatrix4x4All(
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	tr, err := NewTransform(m)
+	tr, err := mymath.NewTransform(m)
 	assert.Nil(t, err)
 
 	mInv, err := m.Inverse()
@@ -33,7 +34,7 @@ func TestTransform_NewTransform(t *testing.T) {
 }
 
 func TestTransform_NewTransformFull(t *testing.T) {
-	m := NewMatrix4x4All(
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
@@ -41,7 +42,7 @@ func TestTransform_NewTransformFull(t *testing.T) {
 
 	mInv, err := m.Inverse()
 
-	tr := NewTransformFull(m, mInv)
+	tr := mymath.NewTransformFull(m, mInv)
 
 	assert.Nil(t, err)
 	assert.Equal(t, m, tr.M)
@@ -49,139 +50,139 @@ func TestTransform_NewTransformFull(t *testing.T) {
 }
 
 func TestTransform_NewTransformTranslate(t *testing.T) {
-	delta := NewVector3(5, 6, 7)
-	tr := NewTransformTranslate(delta)
+	delta := mymath.NewVector3(5, 6, 7)
+	tr := mymath.NewTransformTranslate(delta)
 
-	p := NewPoint3(1, 2, 3)
+	p := mymath.NewPoint3(1, 2, 3)
 	res := tr.ApplyP(p)
 
-	assert.Equal(t, NewPoint3(6, 8, 10), res)
+	assert.Equal(t, mymath.NewPoint3(6, 8, 10), res)
 }
 
 func TestTransform_NewTransformScale(t *testing.T) {
-	tr := NewTransformScale(2, 3, 4)
+	tr := mymath.NewTransformScale(2, 3, 4)
 
-	p := NewPoint3(1, 2, 3)
+	p := mymath.NewPoint3(1, 2, 3)
 	res := tr.ApplyP(p)
 
-	assert.Equal(t, NewPoint3(2, 6, 12), res)
+	assert.Equal(t, mymath.NewPoint3(2, 6, 12), res)
 }
 
 func TestTransform_RotateX(t *testing.T) {
 	// rotate 90 degrees along X axis
-	tr := NewTransformRotateX(math.Pi / 2)
+	tr := mymath.NewTransformRotateX(math.Pi / 2)
 
-	p := NewPoint3(10, 2, 3)
+	p := mymath.NewPoint3(10, 2, 3)
 	res := tr.ApplyP(p)
 
-	// assert.Equal(t, NewPoint3(10, -3, 2), res)
-	assert.Equal(t, NewPoint3(10, -3.0000000874227766, 1.9999998688658351), res)
+	// assert.Equal(t, mymath.NewPoint3(10, -3, 2), res)
+	assert.Equal(t, mymath.NewPoint3(10, -3.0000000874227766, 1.9999998688658351), res)
 }
 
 func TestTransform_RotateY(t *testing.T) {
 	// rotate 90 degrees along Y axis
-	tr := NewTransformRotateY(math.Pi / 2)
+	tr := mymath.NewTransformRotateY(math.Pi / 2)
 
-	p := NewPoint3(1, 20, 3)
+	p := mymath.NewPoint3(1, 20, 3)
 	res := tr.ApplyP(p)
 
-	// assert.Equal(t, NewPoint3(3, 20, -1), res)
-	assert.Equal(t, NewPoint3(2.9999999562886117, 20, -1.0000001311341649), res)
+	// assert.Equal(t, mymath.NewPoint3(3, 20, -1), res)
+	assert.Equal(t, mymath.NewPoint3(2.9999999562886117, 20, -1.0000001311341649), res)
 }
 
 func TestTransform_RotateZ(t *testing.T) {
 	// rotate 90 degrees along Z axis
-	tr := NewTransformRotateZ(math.Pi / 2)
+	tr := mymath.NewTransformRotateZ(math.Pi / 2)
 
-	p := NewPoint3(1, 2, 30)
+	p := mymath.NewPoint3(1, 2, 30)
 	res := tr.ApplyP(p)
 
-	// assert.Equal(t, NewPoint3(-2, 1, 30), res)
-	assert.Equal(t, NewPoint3(-2.0000000437113883, 0.9999999125772234, 30), res)
+	// assert.Equal(t, mymath.NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, mymath.NewPoint3(-2.0000000437113883, 0.9999999125772234, 30), res)
 }
 
 func TestTransform_Rotate(t *testing.T) {
 	// X axis
-	var axis = NewVector3(1, 0, 0)
-	var tr = NewTransformRotate(math.Pi/2, axis)
+	var axis = mymath.NewVector3(1, 0, 0)
+	var tr = mymath.NewTransformRotate(math.Pi/2, axis)
 
-	var p = NewPoint3(10, 2, 3)
+	var p = mymath.NewPoint3(10, 2, 3)
 	var res = tr.ApplyP(p)
 
-	assert.Equal(t, NewPoint3(10, -3, 2), res)
+	assert.Equal(t, mymath.NewPoint3(10, -3, 2), res)
 
 	// Y axis
-	axis = NewVector3(0, 1, 0)
-	tr = NewTransformRotate(math.Pi/2, axis)
+	axis = mymath.NewVector3(0, 1, 0)
+	tr = mymath.NewTransformRotate(math.Pi/2, axis)
 
-	p = NewPoint3(1, 20, 3)
+	p = mymath.NewPoint3(1, 20, 3)
 	res = tr.ApplyP(p)
 
-	// assert.Equal(t, NewPoint3(3, 20, -1), res)
-	assert.Equal(t, NewPoint3(3, 20, -0.9999999999999998), res)
+	// assert.Equal(t, mymath.NewPoint3(3, 20, -1), res)
+	assert.Equal(t, mymath.NewPoint3(3, 20, -0.9999999999999998), res)
 
 	// Z axis
-	axis = NewVector3(0, 0, 1)
-	tr = NewTransformRotate(math.Pi/2, axis)
+	axis = mymath.NewVector3(0, 0, 1)
+	tr = mymath.NewTransformRotate(math.Pi/2, axis)
 
-	p = NewPoint3(1, 2, 30)
+	p = mymath.NewPoint3(1, 2, 30)
 	res = tr.ApplyP(p)
 
-	// assert.Equal(t, NewPoint3(-2, 1, 30), res)
-	assert.Equal(t, NewPoint3(-2, 1.0000000000000002, 30), res)
+	// assert.Equal(t, mymath.NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, mymath.NewPoint3(-2, 1.0000000000000002, 30), res)
 }
 
 func TestTransform_NewTransformLookAt(t *testing.T) {
-	pos := NewPoint3(0, 0, 0)
-	look := NewPoint3(0, 0, 10)
-	up := NewVector3(10, 0, 0)
+	pos := mymath.NewPoint3(0, 0, 0)
+	look := mymath.NewPoint3(0, 0, 10)
+	up := mymath.NewVector3(10, 0, 0)
 
-	tr, err := NewTransformLookAt(pos, look, up)
+	tr, err := mymath.NewTransformLookAt(pos, look, up)
 
 	assert.Nil(t, err)
 
-	p := NewPoint3(1, 2, 30)
+	p := mymath.NewPoint3(1, 2, 30)
 	res := tr.ApplyP(p)
 
-	assert.Equal(t, NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, mymath.NewPoint3(-2, 1, 30), res)
 }
 
 func TestTransform_ApplyB(t *testing.T) {
-	tr := NewTransformTranslate(NewVector3(1, 2, 3))
+	tr := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
-	bounds := NewBounds3(
-		NewPoint3(0, 0, 0),
-		NewPoint3(1, 1, 1))
+	bounds := mymath.NewBounds3(
+		mymath.NewPoint3(0, 0, 0),
+		mymath.NewPoint3(1, 1, 1))
 
 	res := tr.ApplyB(bounds)
 
-	expected := NewBounds3(
-		NewPoint3(1, 2, 3),
-		NewPoint3(2, 3, 4))
+	expected := mymath.NewBounds3(
+		mymath.NewPoint3(1, 2, 3),
+		mymath.NewPoint3(2, 3, 4))
 
 	assert.Equal(t, expected, res)
 }
 
 func TestTransform_ApplyT(t *testing.T) {
-	tr := NewTransformTranslate(NewVector3(1, 2, 3))
+	tr := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	res := tr.ApplyT(tr)
 
-	p := NewPoint3(0, 0, 0)
+	p := mymath.NewPoint3(0, 0, 0)
 	pT := res.ApplyP(p)
-	assert.Equal(t, NewPoint3(2, 4, 6), pT)
+	assert.Equal(t, mymath.NewPoint3(2, 4, 6), pT)
 
-	assert.Equal(t, NewPoint3(2, 4, 6), tr.ApplyP(tr.ApplyP(p)))
+	assert.Equal(t, mymath.NewPoint3(2, 4, 6), tr.ApplyP(tr.ApplyP(p)))
 }
 
 func TestTransform_Inverse(t *testing.T) {
-	m := NewMatrix4x4All(
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	tr, err := NewTransform(m)
+	tr, err := mymath.NewTransform(m)
 	assert.Nil(t, err)
 
 	tr = tr.Inverse()
@@ -194,13 +195,13 @@ func TestTransform_Inverse(t *testing.T) {
 }
 
 func TestTransform_Transpose(t *testing.T) {
-	m := NewMatrix4x4All(
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	tr, err := NewTransform(m)
+	tr, err := mymath.NewTransform(m)
 	assert.Nil(t, err)
 
 	tr = tr.Transpose()
@@ -213,22 +214,22 @@ func TestTransform_Transpose(t *testing.T) {
 }
 
 func TestTransform_IsIdentity(t *testing.T) {
-	tr := NewTransformEmpty()
+	tr := mymath.NewTransformEmpty()
 
 	assert.True(t, tr.IsIdentity())
 }
 
 func TestTransform_HasScale(t *testing.T) {
-	var tr = NewTransformEmpty()
+	var tr = mymath.NewTransformEmpty()
 	assert.False(t, tr.HasScale())
 
-	tr = NewTransformTranslate(Vector3{1, 2, 3})
+	tr = mymath.NewTransformTranslate(mymath.Vector3{1, 2, 3})
 	assert.False(t, tr.HasScale())
 
-	tr = NewTransformScale(1, 1, 1)
+	tr = mymath.NewTransformScale(1, 1, 1)
 	assert.False(t, tr.HasScale())
 
-	tr = NewTransformScale(2, 2, 2)
+	tr = mymath.NewTransformScale(2, 2, 2)
 	assert.True(t, tr.HasScale())
 }
 
@@ -236,37 +237,37 @@ func TestTransform_HasScale(t *testing.T) {
 // BENCHMARKS ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 func BenchmarkTransform_NewTransformEmpty(b *testing.B) {
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformEmpty()
+		res = mymath.NewTransformEmpty()
 	}
 
 	assert.NotNil(b, res)
 }
 
 func BenchmarkTransform_NewTransform(b *testing.B) {
-	m := NewMatrix4x4All(
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
 		1, 8, 3, 8)
 
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res, _ = NewTransform(m)
+		res, _ = mymath.NewTransform(m)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformFull(b *testing.B) {
-	m := NewMatrix4x4All(
+func BenchmarkTransformNewTransformFull(b *testing.B) {
+	m := mymath.NewMatrix4x4All(
 		5, 2, 8, 3,
 		7, 3, 5, 3,
 		9, 3, 2, 4,
@@ -274,117 +275,117 @@ func BenchmarkTransform_NewTransformFull(b *testing.B) {
 
 	mInv, _ := m.Inverse()
 
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformFull(m, mInv)
+		res = mymath.NewTransformFull(m, mInv)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformTranslate(b *testing.B) {
-	delta := NewVector3(1, 2, 3)
+func BenchmarkTransformNewTransformTranslate(b *testing.B) {
+	delta := mymath.NewVector3(1, 2, 3)
 
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformTranslate(delta)
+		res = mymath.NewTransformTranslate(delta)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformScale(b *testing.B) {
-	var res Transform
+func BenchmarkTransformNewTransformScale(b *testing.B) {
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformScale(1, 2, 3)
+		res = mymath.NewTransformScale(1, 2, 3)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformRotateX(b *testing.B) {
+func BenchmarkTransformNewTransformRotateX(b *testing.B) {
 	theta := float32(math.Pi / 2)
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformRotateX(theta)
+		res = mymath.NewTransformRotateX(theta)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformRotateY(b *testing.B) {
+func BenchmarkTransformNewTransformRotateY(b *testing.B) {
 	theta := float32(math.Pi / 2)
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformRotateY(theta)
+		res = mymath.NewTransformRotateY(theta)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformRotateZ(b *testing.B) {
+func BenchmarkTransformNewTransformRotateZ(b *testing.B) {
 	theta := float32(math.Pi / 2)
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformRotateZ(theta)
+		res = mymath.NewTransformRotateZ(theta)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformRotate(b *testing.B) {
-	axis := NewVector3(1, 2, 3)
+func BenchmarkTransformNewTransformRotate(b *testing.B) {
+	axis := mymath.NewVector3(1, 2, 3)
 	theta := math.Pi / 2
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		res = NewTransformRotate(theta, axis)
+		res = mymath.NewTransformRotate(theta, axis)
 	}
 
 	assert.NotNil(b, res)
 }
 
-func BenchmarkTransform_NewTransformLookAt(b *testing.B) {
-	pos := NewPoint3(0, 0, 0)
-	look := NewPoint3(0, 0, 10)
-	up := NewVector3(10, 0, 0)
+func BenchmarkTransformNewTransformLookAt(b *testing.B) {
+	pos := mymath.NewPoint3(0, 0, 0)
+	look := mymath.NewPoint3(0, 0, 10)
+	up := mymath.NewVector3(10, 0, 0)
 
-	var tr Transform
+	var tr mymath.Transform
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		tr, _ = NewTransformLookAt(pos, look, up)
+		tr, _ = mymath.NewTransformLookAt(pos, look, up)
 	}
 
 	assert.NotNil(b, tr)
 }
 
 func BenchmarkTransform_ApplyP(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	p := NewPoint3(1, 2, 3)
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	p := mymath.NewPoint3(1, 2, 3)
 
-	var res Point3
+	var res mymath.Point3
 
 	b.ResetTimer()
 
@@ -396,10 +397,10 @@ func BenchmarkTransform_ApplyP(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyV(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	v := NewVector3(1, 2, 3)
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	v := mymath.NewVector3(1, 2, 3)
 
-	var res Vector3
+	var res mymath.Vector3
 
 	b.ResetTimer()
 
@@ -411,10 +412,10 @@ func BenchmarkTransform_ApplyV(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyN(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	n := NewNormal3(0, 1, 0)
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	n := mymath.NewNormal3(0, 1, 0)
 
-	var res Vector3
+	var res mymath.Vector3
 
 	b.ResetTimer()
 
@@ -426,15 +427,15 @@ func BenchmarkTransform_ApplyN(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyR(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	r := NewRay(
-		NewPoint3(0, 0, 0),
-		NewVector3(0, 0, 1),
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	r := mymath.NewRay(
+		mymath.NewPoint3(0, 0, 0),
+		mymath.NewVector3(0, 0, 1),
 		99,
 		0,
 		material.Medium{})
 
-	var res Ray
+	var res mymath.Ray
 
 	b.ResetTimer()
 
@@ -446,17 +447,17 @@ func BenchmarkTransform_ApplyR(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyRD(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	r := NewRay(
-		NewPoint3(0, 0, 0),
-		NewVector3(0, 0, 1),
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	r := mymath.NewRay(
+		mymath.NewPoint3(0, 0, 0),
+		mymath.NewVector3(0, 0, 1),
 		99,
 		0,
 		material.Medium{})
 
-	rd := NewRayDifferentialRay(r)
+	rd := mymath.NewRayDifferentialRay(r)
 
-	var res RayDifferential
+	var res mymath.RayDifferential
 
 	b.ResetTimer()
 
@@ -468,12 +469,12 @@ func BenchmarkTransform_ApplyRD(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyB(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
-	bounds := NewBounds3(
-		NewPoint3(0, 0, 0),
-		NewPoint3(1, 1, 1))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+	bounds := mymath.NewBounds3(
+		mymath.NewPoint3(0, 0, 0),
+		mymath.NewPoint3(1, 1, 1))
 
-	var res Bounds3
+	var res mymath.Bounds3
 
 	b.ResetTimer()
 
@@ -485,9 +486,9 @@ func BenchmarkTransform_ApplyB(b *testing.B) {
 }
 
 func BenchmarkTransform_ApplyT(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
-	var res Transform
+	var res mymath.Transform
 
 	b.ResetTimer()
 
@@ -499,7 +500,7 @@ func BenchmarkTransform_ApplyT(b *testing.B) {
 }
 
 func BenchmarkTransform_Inverse(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	res := t
 
@@ -513,7 +514,7 @@ func BenchmarkTransform_Inverse(b *testing.B) {
 }
 
 func BenchmarkTransform_Transpose(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	res := t
 
@@ -527,7 +528,7 @@ func BenchmarkTransform_Transpose(b *testing.B) {
 }
 
 func BenchmarkTransform_IsIdentity(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	var res bool
 
@@ -541,7 +542,7 @@ func BenchmarkTransform_IsIdentity(b *testing.B) {
 }
 
 func BenchmarkTransform_HasScale(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	var res bool
 
@@ -555,7 +556,7 @@ func BenchmarkTransform_HasScale(b *testing.B) {
 }
 
 func BenchmarkTransform_SwapsHandedness(b *testing.B) {
-	t := NewTransformTranslate(NewVector3(1, 2, 3))
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
 	var res bool
 
