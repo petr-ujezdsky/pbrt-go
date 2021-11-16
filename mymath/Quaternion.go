@@ -49,3 +49,16 @@ func (q Quaternion) Normalize() Quaternion {
 func (q1 Quaternion) Dot(q2 Quaternion) float64 {
 	return q1.V.Dot(q2.V) + q1.W*q2.W
 }
+
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/quaternion.cpp#L41
+func (q1 Quaternion) ToTransform() Transform {
+	w, x, y, z := q1.W, q1.V.X, q1.V.Y, q1.V.Z
+
+	m := NewMatrix4x4AllF64(
+		1-2*y*y-2*z*z, 2*x*y+2*w*z, 2*x*z-2*w*y, 0,
+		2*x*y-2*w*z, 1-2*x*x-2*z*z, 2*y*z+2*w*x, 0,
+		2*x*z+2*w*y, 2*y*z-2*w*x, 1-2*x*x-2*y*y, 0,
+		0, 0, 0, 1)
+
+	return NewTransformFull(m.Transpose(), m)
+}

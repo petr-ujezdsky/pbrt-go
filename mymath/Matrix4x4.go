@@ -23,6 +23,19 @@ func NewMatrix4x4All(
 		{t30, t31, t32, t33}}}
 }
 
+func NewMatrix4x4AllF64(
+	t00, t01, t02, t03,
+	t10, t11, t12, t13,
+	t20, t21, t22, t23,
+	t30, t31, t32, t33 float64) Matrix4x4 {
+
+	return Matrix4x4{[4][4]float32{
+		{float32(t00), float32(t01), float32(t02), float32(t03)},
+		{float32(t10), float32(t11), float32(t12), float32(t13)},
+		{float32(t20), float32(t21), float32(t22), float32(t23)},
+		{float32(t30), float32(t31), float32(t32), float32(t33)}}}
+}
+
 func Identity() Matrix4x4 {
 	return NewMatrix4x4All(
 		1, 0, 0, 0,

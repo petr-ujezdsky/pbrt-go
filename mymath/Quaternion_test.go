@@ -102,6 +102,19 @@ func TestQuaternion_Dot(t *testing.T) {
 	assert.Equal(t, -60.0, res)
 }
 
+func TestQuaternion_ToTransform(t *testing.T) {
+	// rotate 90 degrees along Z axis
+	q1 := mymath.NewQuaternionFull(0, 0, 1, 1).Normalize()
+
+	tr := q1.ToTransform()
+
+	p := mymath.NewPoint3(1, 2, 30)
+	res := tr.ApplyP(p)
+
+	// assert.Equal(t, NewPoint3(-2, 1, 30), res)
+	assert.Equal(t, mymath.NewPoint3(-1.9999999999999998, 1.0000000000000004, 30), res)
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // BENCHMARKS ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +251,20 @@ func BenchmarkQuaternion_Dot(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = q1.Dot(q2)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkQuaternion_ToTransform(b *testing.B) {
+	q1 := mymath.NewQuaternionFull(1, 2, 3, 4)
+
+	var res mymath.Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = q1.ToTransform()
 	}
 
 	assert.NotNil(b, res)
