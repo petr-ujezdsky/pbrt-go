@@ -6,7 +6,7 @@ import (
 )
 
 type Transform struct {
-	m, mInv Matrix4x4
+	M, MInv Matrix4x4
 }
 
 func NewTransformEmpty() Transform {
@@ -176,30 +176,30 @@ func NewTransformLookAt(pos, look Point3, up Vector3) (Transform, error) {
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L222
 func (t Transform) ApplyP(p Point3) Point3 {
-	return t.m.MultiplyP(p)
+	return t.M.MultiplyP(p)
 }
 
 // Applies transformation to Point, also returns error vector
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L278
 func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
-	pt := t.m.MultiplyP(p)
+	pt := t.M.MultiplyP(p)
 
 	// Compute absolute error for transformed point
-	xAbsSum := math.Abs(float64(t.m.M[0][0])*p.X) +
-		math.Abs(float64(t.m.M[0][1])*p.Y) +
-		math.Abs(float64(t.m.M[0][2])*p.Z) +
-		math.Abs(float64(t.m.M[0][3]))
+	xAbsSum := math.Abs(float64(t.M.M[0][0])*p.X) +
+		math.Abs(float64(t.M.M[0][1])*p.Y) +
+		math.Abs(float64(t.M.M[0][2])*p.Z) +
+		math.Abs(float64(t.M.M[0][3]))
 
-	yAbsSum := math.Abs(float64(t.m.M[1][0])*p.X) +
-		math.Abs(float64(t.m.M[1][1])*p.Y) +
-		math.Abs(float64(t.m.M[1][2])*p.Z) +
-		math.Abs(float64(t.m.M[1][3]))
+	yAbsSum := math.Abs(float64(t.M.M[1][0])*p.X) +
+		math.Abs(float64(t.M.M[1][1])*p.Y) +
+		math.Abs(float64(t.M.M[1][2])*p.Z) +
+		math.Abs(float64(t.M.M[1][3]))
 
-	zAbsSum := math.Abs(float64(t.m.M[2][0])*p.X) +
-		math.Abs(float64(t.m.M[2][1])*p.Y) +
-		math.Abs(float64(t.m.M[2][2])*p.Z) +
-		math.Abs(float64(t.m.M[2][3]))
+	zAbsSum := math.Abs(float64(t.M.M[2][0])*p.X) +
+		math.Abs(float64(t.M.M[2][1])*p.Y) +
+		math.Abs(float64(t.M.M[2][2])*p.Z) +
+		math.Abs(float64(t.M.M[2][3]))
 
 	pError := NewVector3(xAbsSum, yAbsSum, zAbsSum).Multiply(Gamma3)
 
@@ -210,14 +210,14 @@ func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L236
 func (t Transform) ApplyV(v Vector3) Vector3 {
-	return t.m.MultiplyV(v)
+	return t.M.MultiplyV(v)
 }
 
 // Applies transformation to Normal
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L244
 func (t Transform) ApplyN(n Normal3) Vector3 {
-	return t.m.MultiplyN(n)
+	return t.M.MultiplyN(n)
 }
 
 // Applies transformation to Ray
@@ -277,20 +277,20 @@ func (t Transform) ApplyB(b Bounds3) Bounds3 {
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L251
 func (t1 Transform) ApplyT(t2 Transform) Transform {
 	return Transform{
-		t1.m.Multiply(t2.m),
-		t2.mInv.Multiply(t1.mInv)}
+		t1.M.Multiply(t2.M),
+		t2.MInv.Multiply(t1.MInv)}
 }
 
 func (t Transform) Inverse() Transform {
-	return Transform{t.mInv, t.m}
+	return Transform{t.MInv, t.M}
 }
 
 func (t Transform) Transpose() Transform {
-	return Transform{t.m.Transpose(), t.mInv.Transpose()}
+	return Transform{t.M.Transpose(), t.MInv.Transpose()}
 }
 
 func (t Transform) IsIdentity() bool {
-	return t.m.IsIdentity()
+	return t.M.IsIdentity()
 }
 
 func (t Transform) HasScale() bool {
@@ -310,9 +310,9 @@ func (t Transform) HasScale() bool {
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L255
 func (t Transform) SwapsHandedness() bool {
 	// upper left 3x3 submatrix determinant
-	det := t.m.M[0][0]*(t.m.M[1][1]*t.m.M[2][2]-t.m.M[1][2]*t.m.M[2][1]) -
-		t.m.M[0][1]*(t.m.M[1][0]*t.m.M[2][2]-t.m.M[1][2]*t.m.M[2][0]) +
-		t.m.M[0][2]*(t.m.M[1][0]*t.m.M[2][1]-t.m.M[1][1]*t.m.M[2][0])
+	det := t.M.M[0][0]*(t.M.M[1][1]*t.M.M[2][2]-t.M.M[1][2]*t.M.M[2][1]) -
+		t.M.M[0][1]*(t.M.M[1][0]*t.M.M[2][2]-t.M.M[1][2]*t.M.M[2][0]) +
+		t.M.M[0][2]*(t.M.M[1][0]*t.M.M[2][1]-t.M.M[1][1]*t.M.M[2][0])
 
 	return det < 0
 }

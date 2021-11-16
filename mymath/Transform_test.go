@@ -11,8 +11,8 @@ import (
 func TestTransform_NewTransformEmpty(t *testing.T) {
 	tr := NewTransformEmpty()
 
-	assert.Equal(t, Identity(), tr.m)
-	assert.Equal(t, Identity(), tr.mInv)
+	assert.Equal(t, Identity(), tr.M)
+	assert.Equal(t, Identity(), tr.MInv)
 }
 
 func TestTransform_NewTransform(t *testing.T) {
@@ -28,8 +28,8 @@ func TestTransform_NewTransform(t *testing.T) {
 	mInv, err := m.Inverse()
 
 	assert.Nil(t, err)
-	assert.Equal(t, m, tr.m)
-	assert.Equal(t, mInv, tr.mInv)
+	assert.Equal(t, m, tr.M)
+	assert.Equal(t, mInv, tr.MInv)
 }
 
 func TestTransform_NewTransformFull(t *testing.T) {
@@ -44,8 +44,8 @@ func TestTransform_NewTransformFull(t *testing.T) {
 	tr := NewTransformFull(m, mInv)
 
 	assert.Nil(t, err)
-	assert.Equal(t, m, tr.m)
-	assert.Equal(t, mInv, tr.mInv)
+	assert.Equal(t, m, tr.M)
+	assert.Equal(t, mInv, tr.MInv)
 }
 
 func TestTransform_NewTransformTranslate(t *testing.T) {
@@ -189,8 +189,8 @@ func TestTransform_Inverse(t *testing.T) {
 	mInv, err := m.Inverse()
 
 	assert.Nil(t, err)
-	assert.Equal(t, mInv, tr.m)
-	assert.Equal(t, m, tr.mInv)
+	assert.Equal(t, mInv, tr.M)
+	assert.Equal(t, m, tr.MInv)
 }
 
 func TestTransform_Transpose(t *testing.T) {
@@ -208,8 +208,8 @@ func TestTransform_Transpose(t *testing.T) {
 	mInv, err := m.Inverse()
 
 	assert.Nil(t, err)
-	assert.Equal(t, m.Transpose(), tr.m)
-	assert.Equal(t, mInv.Transpose(), tr.mInv)
+	assert.Equal(t, m.Transpose(), tr.M)
+	assert.Equal(t, mInv.Transpose(), tr.MInv)
 }
 
 func TestTransform_IsIdentity(t *testing.T) {
