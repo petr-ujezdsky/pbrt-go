@@ -37,6 +37,20 @@ func TestQuaternion_NewQuaternionFull(t *testing.T) {
 	assert.Equal(t, 4.0, q.W)
 }
 
+func TestQuaternion_NewQuaternionTransform(t *testing.T) {
+	// rotate 90 degrees along Z axis
+	tr, _ := mymath.NewTransform(mymath.NewMatrix4x4All(
+		0, -1, 0, 0,
+		1, 0, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1))
+
+	res := mymath.NewQuaternionTransform(tr)
+
+	// assert.Equal(t, mymath.NewQuaternionFull(0, 0, 1, 1).Normalize(), res)
+	assert.Equal(t, mymath.NewQuaternionFull(0, 0, 0.7071067811865475, 0.7071067811865476), res)
+}
+
 func TestQuaternion_Add(t *testing.T) {
 	q1 := mymath.NewQuaternionFull(1, 2, 3, 4)
 	q2 := mymath.NewQuaternionFull(5, 6, 7, 8)
@@ -152,6 +166,25 @@ func BenchmarkQuaternion_NewQuaternionFull(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = mymath.NewQuaternionFull(1, 2, 3, 4)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkQuaternion_NewQuaternionTransform(b *testing.B) {
+	// rotate 90 degrees along Z axis
+	tr, _ := mymath.NewTransform(mymath.NewMatrix4x4All(
+		0, -1, 0, 0,
+		1, 0, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1))
+
+	var res mymath.Quaternion
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = mymath.NewQuaternionTransform(tr)
 	}
 
 	assert.NotNil(b, res)
