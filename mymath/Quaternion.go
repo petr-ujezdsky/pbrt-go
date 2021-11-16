@@ -92,6 +92,19 @@ func (q1 Quaternion) Dot(q2 Quaternion) float64 {
 	return q1.V.Dot(q2.V) + q1.W*q2.W
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/quaternion.cpp#L94
+func (q1 Quaternion) Slerp(t float64, q2 Quaternion) Quaternion {
+	cosTheta := q1.Dot(q2)
+	if cosTheta > 0.9995 {
+		return q1.Multiply(1 - t).Add(q2.Multiply(t)).Normalize()
+	} else {
+		theta := math.Acos(Clamp(cosTheta, -1, 1))
+		thetap := theta * t
+		qperp := q2.Subtract(q1.Multiply(cosTheta)).Normalize()
+		return q1.Multiply(math.Cos(thetap)).Add(qperp.Multiply(math.Sin(thetap)))
+	}
+}
+
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/quaternion.cpp#L41
 func (q1 Quaternion) ToTransform() Transform {
 	w, x, y, z := q1.W, q1.V.X, q1.V.Y, q1.V.Z
