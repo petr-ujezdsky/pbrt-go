@@ -54,6 +54,18 @@ func (m Matrix4x4) Transpose() Matrix4x4 {
 	)
 }
 
+func (m1 Matrix4x4) Scale(f float64) Matrix4x4 {
+	r := m1
+
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 4; j++ {
+			r.M[i][j] = float32(f * float64(m1.M[i][j]))
+		}
+	}
+
+	return r
+}
+
 func (m1 Matrix4x4) Multiply(m2 Matrix4x4) Matrix4x4 {
 	r := Matrix4x4{}
 

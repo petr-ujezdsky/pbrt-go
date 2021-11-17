@@ -7,6 +7,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func assertAlmostEqualMatrix4x4(t *testing.T, expected, actual mymath.Matrix4x4, msgAndArgs ...interface{}) {
+	// 1. row
+	assert.InDelta(t, expected.M[0][0], actual.M[0][0], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[0][1], actual.M[0][1], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[0][2], actual.M[0][2], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[0][3], actual.M[0][3], equalDelta, msgAndArgs...)
+
+	// 2. row
+	assert.InDelta(t, expected.M[1][0], actual.M[1][0], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[1][1], actual.M[1][1], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[1][2], actual.M[1][2], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[1][3], actual.M[1][3], equalDelta, msgAndArgs...)
+
+	// 3. row
+	assert.InDelta(t, expected.M[2][0], actual.M[2][0], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[2][1], actual.M[2][1], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[2][2], actual.M[2][2], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[2][3], actual.M[2][3], equalDelta, msgAndArgs...)
+
+	// 4. row
+	assert.InDelta(t, expected.M[3][0], actual.M[3][0], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[3][1], actual.M[3][1], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[3][2], actual.M[3][2], equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.M[3][3], actual.M[3][3], equalDelta, msgAndArgs...)
+}
+
 func TestMatrix4x4_NewMatrix4x4All(t *testing.T) {
 	m := mymath.NewMatrix4x4All(
 		1, 2, 3, 4,
@@ -77,6 +103,24 @@ func TestMatrix4x4_Transpose(t *testing.T) {
 		2, 3, 3, 8,
 		8, 5, 2, 3,
 		3, 3, 4, 8)
+
+	assert.Equal(t, expected, res)
+}
+
+func TestMatrix4x4_Scale(t *testing.T) {
+	m := mymath.NewMatrix4x4All(
+		5, 2, 8, 3,
+		7, 3, 5, 3,
+		9, 3, 2, 4,
+		1, 8, 3, 8)
+
+	res := m.Scale(2)
+
+	expected := mymath.NewMatrix4x4All(
+		10, 4, 16, 6,
+		14, 6, 10, 6,
+		18, 6, 4, 8,
+		2, 16, 6, 16)
 
 	assert.Equal(t, expected, res)
 }
@@ -266,6 +310,24 @@ func BenchmarkMatrix4x4_Transpose(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res = m1.Transpose()
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkMatrix4x4_Scale(b *testing.B) {
+	m1 := mymath.NewMatrix4x4All(
+		3.0, 7.0, 2.0, 5.0,
+		1.0, 8.0, 4.0, 2.0,
+		2.0, 1.0, 9.0, 3.0,
+		5.0, 4.0, 7.0, 1.0)
+
+	var res mymath.Matrix4x4
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res = m1.Scale(4)
 	}
 
 	assert.NotNil(b, res)

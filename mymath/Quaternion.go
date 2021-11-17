@@ -22,38 +22,43 @@ func NewQuaternionFull(x, y, z, w float64) Quaternion {
 
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/quaternion.cpp#L61
 func NewQuaternionTransform(t Transform) Quaternion {
+	return NewQuaternionMatrix(t.M)
+}
+
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/quaternion.cpp#L61
+func NewQuaternionMatrix(m Matrix4x4) Quaternion {
 	quat := NewQuaternionEmpty()
-	trace := float64(t.M.M[0][0] + t.M.M[1][1] + t.M.M[2][2])
+	trace := float64(m.M[0][0] + m.M[1][1] + m.M[2][2])
 	if trace > 0 {
 		// Compute w from matrix trace, then xyz
 		// 4w^2 = m[0][0] + m[1][1] + m[2][2] + m[3][3] (but m[3][3] == 1)
 		s := math.Sqrt(trace + 1.0)
 		quat.W = s / 2.0
 		s = 0.5 / s
-		quat.V.X = float64(t.M.M[2][1]-t.M.M[1][2]) * s
-		quat.V.Y = float64(t.M.M[0][2]-t.M.M[2][0]) * s
-		quat.V.Z = float64(t.M.M[1][0]-t.M.M[0][1]) * s
+		quat.V.X = float64(m.M[2][1]-m.M[1][2]) * s
+		quat.V.Y = float64(m.M[0][2]-m.M[2][0]) * s
+		quat.V.Z = float64(m.M[1][0]-m.M[0][1]) * s
 	} else {
 		// Compute largest of $x$, $y$, or $z$, then remaining components
 		nxt := [3]int{1, 2, 0}
 		q := [3]float64{}
 		i := 0
-		if t.M.M[1][1] > t.M.M[0][0] {
+		if m.M[1][1] > m.M[0][0] {
 			i = 1
 		}
-		if t.M.M[2][2] > t.M.M[i][i] {
+		if m.M[2][2] > m.M[i][i] {
 			i = 2
 		}
 		j := nxt[i]
 		k := nxt[j]
-		s := math.Sqrt(float64(t.M.M[i][i]-(t.M.M[j][j]+t.M.M[k][k])) + 1.0)
+		s := math.Sqrt(float64(m.M[i][i]-(m.M[j][j]+m.M[k][k])) + 1.0)
 		q[i] = s * 0.5
 		if s != 0.0 {
 			s = 0.5 / s
 		}
-		quat.W = float64(t.M.M[k][j]-t.M.M[j][k]) * s
-		q[j] = float64(t.M.M[j][i]+t.M.M[i][j]) * s
-		q[k] = float64(t.M.M[k][i]+t.M.M[i][k]) * s
+		quat.W = float64(m.M[k][j]-m.M[j][k]) * s
+		q[j] = float64(m.M[j][i]+m.M[i][j]) * s
+		q[k] = float64(m.M[k][i]+m.M[i][k]) * s
 		quat.V.X = q[0]
 		quat.V.Y = q[1]
 		quat.V.Z = q[2]
