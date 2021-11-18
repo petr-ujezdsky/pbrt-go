@@ -13,6 +13,46 @@ type AnimatedTransform struct {
 	HasRotation                  bool
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L396
+func NewAnimatedTransform(startTransform Transform, startTime float64, endTransform Transform, endTime float64) (AnimatedTransform, error) {
+	T0, R0, S0, err := Decompose(startTransform.M)
+
+	if err != nil {
+		return AnimatedTransform{}, err
+	}
+
+	T1, R1, S1, err := Decompose(endTransform.M)
+
+	if err != nil {
+		return AnimatedTransform{}, err
+	}
+
+	dot := R0.Dot(R1)
+	// Flip _R[1]_ if needed to select shortest path
+	if dot < 0 {
+		R1 = R1.Negate()
+	}
+
+	return AnimatedTransform{
+		StartTransform:   startTransform,
+		EndTransform:     endTransform,
+		startTime:        startTime,
+		endTime:          endTime,
+		actuallyAnimated: startTransform != endTransform,
+		T:                [2]Vector3{T0, T1},
+		R:                [2]Quaternion{R0, R1},
+		S:                [2]Matrix4x4{S0, S1},
+	}, nil
+
+	// TODO
+	// hasRotation := dot < 0.9995
+
+	// // Compute terms of motion derivative function
+	// if hasRotation {
+
+	// }
+}
+
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1103
 func Decompose(m Matrix4x4) (Vector3, Quaternion, Matrix4x4, error) {
 	T := Vector3{}
@@ -73,4 +113,43 @@ func Decompose(m Matrix4x4) (Vector3, Quaternion, Matrix4x4, error) {
 	S := RInv.Multiply(M)
 
 	return T, Rquat, S, nil
+}
+
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1144
+func (at AnimatedTransform) Interpolate(time float64) (Transform, error) {
+	// Handle boundary conditions for matrix interpolation
+	if !at.actuallyAnimated || time <= at.startTime {
+		return at.StartTransform, nil
+	}
+
+	if time >= at.endTime {
+		return at.EndTransform, nil
+	}
+
+	// 0 <= dt <= 1
+	dt := (time - at.startTime) / (at.endTime - at.startTime)
+
+	// Interpolate translation at _dt_
+	trans := at.T[0].Multiply(1 - dt).Add(at.T[1].Multiply(dt))
+
+	// Interpolate rotation at _dt_
+	rotate := at.R[0].Slerp(dt, at.R[1])
+
+	// Interpolate scale at _dt_
+	scale := Matrix4x4{}
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 3; j++ {
+			scale.M[i][j] = float32(Lerp(dt, float64(at.S[0].M[i][j]), float64(at.S[1].M[i][j])))
+		}
+	}
+	scale.M[3][3] = 1
+
+	S, err := NewTransform(scale)
+
+	if err != nil {
+		return NewTransformEmpty(), err
+	}
+
+	// Compute interpolated matrix as product of interpolated components
+	return NewTransformTranslate(trans).ApplyT(rotate.ToTransform()).ApplyT(S), nil
 }
