@@ -2,6 +2,7 @@ package mymath_test
 
 import (
 	"math"
+	"pbrt-go/material"
 	"pbrt-go/mymath"
 	"testing"
 
@@ -168,7 +169,7 @@ func BenchmarkAnimatedTransform_Decompose(b *testing.B) {
 	assert.NotNil(b, res)
 }
 
-func BenchmarkAnimatedTransform_Interpolate(b *testing.B) {
+func BenchmarkAnimatedTransform_Interpolate_animated(b *testing.B) {
 	t0 := mymath.NewTransformEmpty()
 	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 
@@ -180,6 +181,43 @@ func BenchmarkAnimatedTransform_Interpolate(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res, _ = at.Interpolate(5)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyR_animated(b *testing.B) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	var res mymath.Ray
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyR(r)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyR_static(b *testing.B) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t, 0, t, 10)
+
+	var res mymath.Ray
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyR(r)
 	}
 
 	assert.NotNil(b, res)

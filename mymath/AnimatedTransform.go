@@ -153,3 +153,16 @@ func (at AnimatedTransform) Interpolate(time float64) (Transform, error) {
 	// Compute interpolated matrix as product of interpolated components
 	return NewTransformTranslate(trans).ApplyT(rotate.ToTransform()).ApplyT(S), nil
 }
+
+func (at AnimatedTransform) ApplyR(r Ray) (Ray, error) {
+	if !at.actuallyAnimated || float64(r.Time) <= at.startTime {
+		return at.StartTransform.ApplyR(r), nil
+	}
+
+	if float64(r.Time) >= at.endTime {
+		return at.EndTransform.ApplyR(r), nil
+	}
+
+	t, err := at.Interpolate(float64(r.Time))
+	return t.ApplyR(r), err
+}
