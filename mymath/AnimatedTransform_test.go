@@ -186,6 +186,22 @@ func BenchmarkAnimatedTransform_Interpolate_animated(b *testing.B) {
 	assert.NotNil(b, res)
 }
 
+func BenchmarkAnimatedTransform_Interpolate_static(b *testing.B) {
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t, 0, t, 10)
+
+	var res mymath.Transform
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.Interpolate(5)
+	}
+
+	assert.NotNil(b, res)
+}
+
 func BenchmarkAnimatedTransform_ApplyR_animated(b *testing.B) {
 	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
 
