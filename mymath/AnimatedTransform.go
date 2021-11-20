@@ -154,6 +154,7 @@ func (at AnimatedTransform) Interpolate(time float64) (Transform, error) {
 	return NewTransformTranslate(trans).ApplyT(rotate.ToTransform()).ApplyT(S), nil
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1171
 func (at AnimatedTransform) ApplyR(r Ray) (Ray, error) {
 	if !at.actuallyAnimated || float64(r.Time) <= at.startTime {
 		return at.StartTransform.ApplyR(r), nil
@@ -167,6 +168,7 @@ func (at AnimatedTransform) ApplyR(r Ray) (Ray, error) {
 	return t.ApplyR(r), err
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1183
 func (at AnimatedTransform) ApplyRD(rd RayDifferential) (RayDifferential, error) {
 	if !at.actuallyAnimated || float64(rd.Time) <= at.startTime {
 		return at.StartTransform.ApplyRD(rd), nil
@@ -180,6 +182,7 @@ func (at AnimatedTransform) ApplyRD(rd RayDifferential) (RayDifferential, error)
 	return t.ApplyRD(rd), err
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1195
 func (at AnimatedTransform) ApplyP(time float64, p Point3) (Point3, error) {
 	if !at.actuallyAnimated || time <= at.startTime {
 		return at.StartTransform.ApplyP(p), nil
@@ -193,6 +196,7 @@ func (at AnimatedTransform) ApplyP(time float64, p Point3) (Point3, error) {
 	return t.ApplyP(p), err
 }
 
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1205
 func (at AnimatedTransform) ApplyV(time float64, v Vector3) (Vector3, error) {
 	if !at.actuallyAnimated || time <= at.startTime {
 		return at.StartTransform.ApplyV(v), nil
