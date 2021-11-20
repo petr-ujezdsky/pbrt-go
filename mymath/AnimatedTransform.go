@@ -179,3 +179,29 @@ func (at AnimatedTransform) ApplyRD(rd RayDifferential) (RayDifferential, error)
 	t, err := at.Interpolate(float64(rd.Time))
 	return t.ApplyRD(rd), err
 }
+
+func (at AnimatedTransform) ApplyP(time float64, p Point3) (Point3, error) {
+	if !at.actuallyAnimated || time <= at.startTime {
+		return at.StartTransform.ApplyP(p), nil
+	}
+
+	if time >= at.endTime {
+		return at.EndTransform.ApplyP(p), nil
+	}
+
+	t, err := at.Interpolate(time)
+	return t.ApplyP(p), err
+}
+
+func (at AnimatedTransform) ApplyV(time float64, v Vector3) (Vector3, error) {
+	if !at.actuallyAnimated || time <= at.startTime {
+		return at.StartTransform.ApplyV(v), nil
+	}
+
+	if time >= at.endTime {
+		return at.EndTransform.ApplyV(v), nil
+	}
+
+	t, err := at.Interpolate(time)
+	return t.ApplyV(v), err
+}

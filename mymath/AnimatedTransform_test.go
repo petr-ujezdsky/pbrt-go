@@ -183,6 +183,44 @@ func TestAnimatedTransform_ApplyRD(t *testing.T) {
 	assertAlmostEqualRayDifferential(t, expected, res)
 }
 
+func TestAnimatedTransform_ApplyP(t *testing.T) {
+	p := mymath.NewPoint3(0, 0, 0)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, err := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	assert.Nil(t, err)
+
+	res, err := at.ApplyP(5, p)
+
+	assert.Nil(t, err)
+
+	expected := mymath.NewPoint3(0.5, 1, 1.5)
+
+	assertAlmostEqualPoint3(t, expected, res)
+}
+
+func TestAnimatedTransform_ApplyV(t *testing.T) {
+	v := mymath.NewVector3(0, 0, 0)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, err := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	assert.Nil(t, err)
+
+	res, err := at.ApplyV(5, v)
+
+	assert.Nil(t, err)
+
+	expected := mymath.NewVector3(0, 0, 0)
+
+	assertAlmostEqualVector3(t, expected, res)
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // BENCHMARKS ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -318,6 +356,80 @@ func BenchmarkAnimatedTransform_ApplyRD_static(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res, _ = at.ApplyRD(rd)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyP_animated(b *testing.B) {
+	p := mymath.NewPoint3(0, 0, 0)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	var res mymath.Point3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyP(5.0, p)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyP_static(b *testing.B) {
+	p := mymath.NewPoint3(0, 0, 0)
+
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t, 0, t, 10)
+
+	var res mymath.Point3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyP(5.0, p)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyV_animated(b *testing.B) {
+	v := mymath.NewVector3(0, 0, 0)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	var res mymath.Vector3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyV(5.0, v)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyV_static(b *testing.B) {
+	v := mymath.NewVector3(0, 0, 0)
+
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t, 0, t, 10)
+
+	var res mymath.Vector3
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyV(5.0, v)
 	}
 
 	assert.NotNil(b, res)
