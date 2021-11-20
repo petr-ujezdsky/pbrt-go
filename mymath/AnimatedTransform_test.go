@@ -138,6 +138,51 @@ func TestAnimatedTransform_Interpolate(t *testing.T) {
 	assertAlmostEqualMatrix4x4(t, expected.M, res.M)
 }
 
+func TestAnimatedTransform_ApplyR(t *testing.T) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, err := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	assert.Nil(t, err)
+
+	res, err := at.ApplyR(r)
+
+	assert.Nil(t, err)
+
+	expected := mymath.NewRay(mymath.NewPoint3(0.5, 1, 1.5), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+
+	assertAlmostEqualRay(t, expected, res)
+}
+
+func TestAnimatedTransform_ApplyRD(t *testing.T) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+	rd := mymath.NewRayDifferentialRay(r)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, err := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	assert.Nil(t, err)
+
+	res, err := at.ApplyRD(rd)
+
+	assert.Nil(t, err)
+
+	expected := mymath.RayDifferential{
+		mymath.NewRay(mymath.NewPoint3(0.5, 1, 1.5), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{}),
+		false,
+		mymath.NewPoint3(0.5, 1, 1.5),
+		mymath.NewPoint3(0.5, 1, 1.5),
+		mymath.NewVector3(0, 0, 0),
+		mymath.NewVector3(0, 0, 0)}
+
+	assertAlmostEqualRayDifferential(t, expected, res)
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // BENCHMARKS ////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +279,45 @@ func BenchmarkAnimatedTransform_ApplyR_static(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		res, _ = at.ApplyR(r)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyRD_animated(b *testing.B) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+	rd := mymath.NewRayDifferentialRay(r)
+
+	t0 := mymath.NewTransformEmpty()
+	t1 := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t0, 0, t1, 10)
+
+	var res mymath.RayDifferential
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyRD(rd)
+	}
+
+	assert.NotNil(b, res)
+}
+
+func BenchmarkAnimatedTransform_ApplyRD_static(b *testing.B) {
+	r := mymath.NewRay(mymath.NewPoint3(0, 0, 0), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
+	rd := mymath.NewRayDifferentialRay(r)
+
+	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
+
+	at, _ := mymath.NewAnimatedTransform(t, 0, t, 10)
+
+	var res mymath.RayDifferential
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		res, _ = at.ApplyRD(rd)
 	}
 
 	assert.NotNil(b, res)

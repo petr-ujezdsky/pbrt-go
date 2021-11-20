@@ -166,3 +166,16 @@ func (at AnimatedTransform) ApplyR(r Ray) (Ray, error) {
 	t, err := at.Interpolate(float64(r.Time))
 	return t.ApplyR(r), err
 }
+
+func (at AnimatedTransform) ApplyRD(rd RayDifferential) (RayDifferential, error) {
+	if !at.actuallyAnimated || float64(rd.Time) <= at.startTime {
+		return at.StartTransform.ApplyRD(rd), nil
+	}
+
+	if float64(rd.Time) >= at.endTime {
+		return at.EndTransform.ApplyRD(rd), nil
+	}
+
+	t, err := at.Interpolate(float64(rd.Time))
+	return t.ApplyRD(rd), err
+}
