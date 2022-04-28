@@ -215,7 +215,7 @@ func TestMatrix4x4_Inverse(t *testing.T) {
 		0.20388348, -0.1200353, 0.12268313, -0.1473963)
 
 	assert.Nil(t, err)
-	assert.Equal(t, expected, res)
+	InDeltaMatrix4x4(t, expected, res)
 }
 
 // try to create identity matrix by M*M'
@@ -237,7 +237,7 @@ func TestMatrix4x4_Inverse_ToIdentity(t *testing.T) {
 		0, 2.9802322e-08, 0.9999999, 0,
 		-4.4703484e-08, 5.2154064e-08, -3.7252903e-08, 1)
 
-	assert.Equal(t, expected, res)
+	InDeltaMatrix4x4(t, expected, res)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
