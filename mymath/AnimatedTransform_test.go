@@ -15,9 +15,9 @@ func TestAnimatedTransform_Decompose_translate(t *testing.T) {
 	Tvec, Rquat, S, err := mymath.Decompose(T.M)
 
 	assert.Nil(t, err)
-	assertAlmostEqualVector3(t, mymath.NewVector3(1, 2, 3), Tvec)
-	assertAlmostEqual(t, mymath.NewQuaternionEmpty(), Rquat)
-	assertAlmostEqualMatrix4x4(t, mymath.Identity(), S)
+	InDeltaVector3(t, mymath.NewVector3(1, 2, 3), Tvec)
+	InDeltaQuaternion(t, mymath.NewQuaternionEmpty(), Rquat)
+	InDeltaMatrix4x4(t, mymath.Identity(), S)
 }
 
 func TestAnimatedTransform_Decompose_rotate(t *testing.T) {
@@ -27,9 +27,9 @@ func TestAnimatedTransform_Decompose_rotate(t *testing.T) {
 	Tvec, Rquat, S, err := mymath.Decompose(T.M)
 
 	assert.Nil(t, err)
-	assertAlmostEqualVector3(t, mymath.NewVector3(0, 0, 0), Tvec)
-	assertAlmostEqual(t, mymath.NewQuaternionFull(0, 0, 1, 0), Rquat)
-	assertAlmostEqualMatrix4x4(t, mymath.Identity(), S)
+	InDeltaVector3(t, mymath.NewVector3(0, 0, 0), Tvec)
+	InDeltaQuaternion(t, mymath.NewQuaternionFull(0, 0, 1, 0), Rquat)
+	InDeltaMatrix4x4(t, mymath.Identity(), S)
 }
 
 func TestAnimatedTransform_Decompose_scale(t *testing.T) {
@@ -38,9 +38,9 @@ func TestAnimatedTransform_Decompose_scale(t *testing.T) {
 	Tvec, Rquat, S, err := mymath.Decompose(T.M)
 
 	assert.Nil(t, err)
-	assertAlmostEqualVector3(t, mymath.NewVector3(0, 0, 0), Tvec)
-	assertAlmostEqual(t, mymath.NewQuaternionEmpty(), Rquat)
-	assertAlmostEqualMatrix4x4(t, mymath.NewMatrix4x4All(
+	InDeltaVector3(t, mymath.NewVector3(0, 0, 0), Tvec)
+	InDeltaQuaternion(t, mymath.NewQuaternionEmpty(), Rquat)
+	InDeltaMatrix4x4(t, mymath.NewMatrix4x4All(
 		2, 0, 0, 0,
 		0, 2, 0, 0,
 		0, 0, 2, 0,
@@ -54,9 +54,9 @@ func TestAnimatedTransform_Decompose(t *testing.T) {
 	Tvec, Rquat, S, err := mymath.Decompose(T.M)
 
 	assert.Nil(t, err)
-	assertAlmostEqualVector3(t, mymath.NewVector3(1, 2, 3), Tvec)
-	assertAlmostEqual(t, mymath.NewQuaternionFull(0, 0, 1, 0), Rquat)
-	assertAlmostEqualMatrix4x4(t, mymath.NewMatrix4x4All(
+	InDeltaVector3(t, mymath.NewVector3(1, 2, 3), Tvec)
+	InDeltaQuaternion(t, mymath.NewQuaternionFull(0, 0, 1, 0), Rquat)
+	InDeltaMatrix4x4(t, mymath.NewMatrix4x4All(
 		2, 0, 0, 0,
 		0, 2, 0, 0,
 		0, 0, 2, 0,
@@ -78,7 +78,7 @@ func TestAnimatedTransform_Interpolate_translate(t *testing.T) {
 
 	expected := mymath.NewTransformTranslate(mymath.NewVector3(0.5, 1, 1.5))
 
-	assertAlmostEqualMatrix4x4(t, expected.M, res.M)
+	InDeltaMatrix4x4(t, expected.M, res.M)
 }
 
 func TestAnimatedTransform_Interpolate_rotate(t *testing.T) {
@@ -97,7 +97,7 @@ func TestAnimatedTransform_Interpolate_rotate(t *testing.T) {
 	// rotation 45 degrees along Z axis
 	expected := mymath.NewTransformRotateZ(math.Pi / 4)
 
-	assertAlmostEqualMatrix4x4(t, expected.M, res.M)
+	InDeltaMatrix4x4(t, expected.M, res.M)
 }
 
 func TestAnimatedTransform_Interpolate_scale(t *testing.T) {
@@ -116,7 +116,7 @@ func TestAnimatedTransform_Interpolate_scale(t *testing.T) {
 
 	expected := mymath.NewTransformScale(2, 2, 2)
 
-	assertAlmostEqualMatrix4x4(t, expected.M, res.M)
+	InDeltaMatrix4x4(t, expected.M, res.M)
 }
 
 func TestAnimatedTransform_Interpolate(t *testing.T) {
@@ -135,7 +135,7 @@ func TestAnimatedTransform_Interpolate(t *testing.T) {
 
 	expected := mymath.NewTransformTranslate(mymath.NewVector3(0.5, 1, 1.5)).ApplyT(mymath.NewTransformRotateZ(math.Pi / 4)).ApplyT(mymath.NewTransformScale(2, 2, 2))
 
-	assertAlmostEqualMatrix4x4(t, expected.M, res.M)
+	InDeltaMatrix4x4(t, expected.M, res.M)
 }
 
 func TestAnimatedTransform_ApplyR(t *testing.T) {
@@ -154,7 +154,7 @@ func TestAnimatedTransform_ApplyR(t *testing.T) {
 
 	expected := mymath.NewRay(mymath.NewPoint3(0.5, 1, 1.5), mymath.NewVector3(0, 0, 1), 9999, 5, material.Medium{})
 
-	assertAlmostEqualRay(t, expected, res)
+	InDeltaRay(t, expected, res)
 }
 
 func TestAnimatedTransform_ApplyRD(t *testing.T) {
@@ -180,7 +180,7 @@ func TestAnimatedTransform_ApplyRD(t *testing.T) {
 		mymath.NewVector3(0, 0, 0),
 		mymath.NewVector3(0, 0, 0)}
 
-	assertAlmostEqualRayDifferential(t, expected, res)
+	InDeltaRayDifferential(t, expected, res)
 }
 
 func TestAnimatedTransform_ApplyP(t *testing.T) {
@@ -199,7 +199,7 @@ func TestAnimatedTransform_ApplyP(t *testing.T) {
 
 	expected := mymath.NewPoint3(0.5, 1, 1.5)
 
-	assertAlmostEqualPoint3(t, expected, res)
+	InDeltaPoint3(t, expected, res)
 }
 
 func TestAnimatedTransform_ApplyV(t *testing.T) {
@@ -218,7 +218,7 @@ func TestAnimatedTransform_ApplyV(t *testing.T) {
 
 	expected := mymath.NewVector3(0, 0, 0)
 
-	assertAlmostEqualVector3(t, expected, res)
+	InDeltaVector3(t, expected, res)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

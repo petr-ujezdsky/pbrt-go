@@ -7,12 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func assertAlmostEqualPoint3(t *testing.T, expected, actual mymath.Point3, msgAndArgs ...interface{}) {
-	assert.InDelta(t, expected.X, actual.X, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.Y, actual.Y, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.Z, actual.Z, equalDelta, msgAndArgs...)
-}
-
 func TestPoint3_NewPoint3(t *testing.T) {
 	p := mymath.NewPoint3(1, 2, 3)
 

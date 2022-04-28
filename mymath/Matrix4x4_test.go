@@ -7,32 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func assertAlmostEqualMatrix4x4(t *testing.T, expected, actual mymath.Matrix4x4, msgAndArgs ...interface{}) {
-	// 1. row
-	assert.InDelta(t, expected.M[0][0], actual.M[0][0], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[0][1], actual.M[0][1], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[0][2], actual.M[0][2], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[0][3], actual.M[0][3], equalDelta, msgAndArgs...)
-
-	// 2. row
-	assert.InDelta(t, expected.M[1][0], actual.M[1][0], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[1][1], actual.M[1][1], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[1][2], actual.M[1][2], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[1][3], actual.M[1][3], equalDelta, msgAndArgs...)
-
-	// 3. row
-	assert.InDelta(t, expected.M[2][0], actual.M[2][0], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[2][1], actual.M[2][1], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[2][2], actual.M[2][2], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[2][3], actual.M[2][3], equalDelta, msgAndArgs...)
-
-	// 4. row
-	assert.InDelta(t, expected.M[3][0], actual.M[3][0], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[3][1], actual.M[3][1], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[3][2], actual.M[3][2], equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.M[3][3], actual.M[3][3], equalDelta, msgAndArgs...)
-}
-
 func TestMatrix4x4_NewMatrix4x4All(t *testing.T) {
 	m := mymath.NewMatrix4x4All(
 		1, 2, 3, 4,

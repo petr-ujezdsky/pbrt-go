@@ -8,15 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func assertAlmostEqualRayDifferential(t *testing.T, expected, actual mymath.RayDifferential, msgAndArgs ...interface{}) {
-	assertAlmostEqualRay(t, expected.Ray, actual.Ray, msgAndArgs...)
-	assert.Equal(t, expected.HasDifferentials, actual.HasDifferentials)
-	assertAlmostEqualPoint3(t, expected.RxOrigin, actual.RxOrigin, msgAndArgs...)
-	assertAlmostEqualPoint3(t, expected.RyOrigin, actual.RyOrigin, msgAndArgs...)
-	assertAlmostEqualVector3(t, expected.RxDirection, actual.RxDirection, msgAndArgs...)
-	assertAlmostEqualVector3(t, expected.RyDirection, actual.RyDirection, msgAndArgs...)
-}
-
 func TestRayDifferential_NewRayDifferentialRay(t *testing.T) {
 	ray := mymath.NewRay(
 		mymath.NewPoint3(1, 2, 3),

@@ -8,15 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const equalDelta = 0.00001
-
-func assertAlmostEqual(t *testing.T, expected, actual mymath.Quaternion, msgAndArgs ...interface{}) {
-	assert.InDelta(t, expected.V.X, actual.V.X, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.V.Y, actual.V.Y, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.V.Z, actual.V.Z, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.W, actual.W, equalDelta, msgAndArgs...)
-}
-
 func TestQuaternion_NewQuaternionEmpty(t *testing.T) {
 	q := mymath.NewQuaternionEmpty()
 
@@ -132,14 +123,14 @@ func TestQuaternion_Slerp(t *testing.T) {
 	q2 := mymath.NewQuaternionFull(0, 0, 1, 0)
 
 	// 0 degrees
-	t.Run("t=0.0 ~ 0°", func(t *testing.T) { assertAlmostEqual(t, mymath.NewQuaternionFull(0, 0, 0, 1), q1.Slerp(0.0, q2)) })
+	t.Run("t=0.0 ~ 0°", func(t *testing.T) { InDeltaQuaternion(t, mymath.NewQuaternionFull(0, 0, 0, 1), q1.Slerp(0.0, q2)) })
 
 	// 90 degrees
-	t.Run("t=0.5 ~ 90°", func(t *testing.T) { assertAlmostEqual(t, mymath.NewQuaternionFull(0, 0, 1, 0), q1.Slerp(1.0, q2)) })
+	t.Run("t=0.5 ~ 90°", func(t *testing.T) { InDeltaQuaternion(t, mymath.NewQuaternionFull(0, 0, 1, 0), q1.Slerp(1.0, q2)) })
 
 	// 180 degrees
 	t.Run("t=1.0 ~ 180°", func(t *testing.T) {
-		assertAlmostEqual(t, mymath.NewQuaternionFull(0, 0, 1, 1).Normalize(), q1.Slerp(0.5, q2))
+		InDeltaQuaternion(t, mymath.NewQuaternionFull(0, 0, 1, 1).Normalize(), q1.Slerp(0.5, q2))
 	})
 }
 

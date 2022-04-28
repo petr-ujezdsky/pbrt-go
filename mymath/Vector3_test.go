@@ -7,12 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func assertAlmostEqualVector3(t *testing.T, expected, actual mymath.Vector3, msgAndArgs ...interface{}) {
-	assert.InDelta(t, expected.X, actual.X, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.Y, actual.Y, equalDelta, msgAndArgs...)
-	assert.InDelta(t, expected.Z, actual.Z, equalDelta, msgAndArgs...)
-}
-
 func TestVector3_NewVector3(t *testing.T) {
 	v := mymath.NewVector3(1, 2, 3)
 
