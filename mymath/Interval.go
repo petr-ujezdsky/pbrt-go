@@ -20,7 +20,7 @@ func (i1 Interval) Add(i2 Interval) Interval {
 }
 
 func (i1 Interval) Subtract(i2 Interval) Interval {
-	return NewInterval(i1.Low-i2.High, i1.High+i2.Low)
+	return NewInterval(i1.Low-i2.High, i1.High-i2.Low)
 }
 
 func (i1 Interval) Multiply(i2 Interval) Interval {
@@ -55,8 +55,8 @@ func Sin(i1 Interval) Interval {
 
 // Cos see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/transform.cpp#L345
 func Cos(i1 Interval) Interval {
-	cosLow := math.Sin(i1.Low)
-	cosHigh := math.Sin(i1.High)
+	cosLow := math.Cos(i1.Low)
+	cosHigh := math.Cos(i1.High)
 
 	if cosLow > cosHigh {
 		cosLow, cosHigh = cosHigh, cosLow

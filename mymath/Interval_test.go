@@ -46,11 +46,11 @@ func TestInterval_Subtract(t *testing.T) {
 
 func TestInterval_Multiply(t *testing.T) {
 	i1 := mymath.NewInterval(-10, 10)
-	i2 := mymath.NewInterval(-2, 20)
+	i2 := mymath.NewInterval(-2, 30)
 
 	i := i1.Multiply(i2)
-	assert.Equal(t, -19.0, i.Low)
-	assert.Equal(t, -8.0, i.High)
+	assert.Equal(t, -300.0, i.Low)
+	assert.Equal(t, 300.0, i.High)
 }
 
 func TestInterval_Sin(t *testing.T) {
@@ -70,5 +70,5 @@ func TestInterval_Cos(t *testing.T) {
 
 	i = mymath.Cos(mymath.NewInterval(math.Pi/2, 3.0/2.0*math.Pi))
 	assert.Equal(t, -1.0, i.Low)
-	assert.Equal(t, 0.0, i.High)
+	assert.InDelta(t, 0.0, i.High, equalDelta)
 }
