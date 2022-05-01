@@ -6,10 +6,13 @@ var epsilon = math.Nextafter(1, 2) - 1
 
 var Gamma3 = gamma(3)
 
+// Lerp returns value interpolated between v1 and v2 using parameter t.
 func Lerp(t, v1, v2 float64) float64 {
 	return (1-t)*v1 + t*v2
 }
 
+// Clamp returns value inside given interval unchanged and the interval limits if value is outside the interval.
+//
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/pbrt.h#L304
 func Clamp(val, low, high float64) float64 {
 	if val < low {
