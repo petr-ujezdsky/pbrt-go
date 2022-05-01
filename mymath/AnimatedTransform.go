@@ -11,6 +11,7 @@ type AnimatedTransform struct {
 	R                            [2]Quaternion
 	S                            [2]Matrix4x4
 	HasRotation                  bool
+	C1, C2, C3, C4, C5           [3]DerivativeTerm
 }
 
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L396
@@ -51,6 +52,100 @@ func NewAnimatedTransform(startTransform Transform, startTime float64, endTransf
 	// if hasRotation {
 
 	// }
+}
+
+// MotionBounds see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/transform.cpp#L1215
+func (at AnimatedTransform) MotionBounds(b Bounds3) (Bounds3, error) {
+	if !at.actuallyAnimated {
+		return at.StartTransform.ApplyB(b), nil
+	}
+
+	if at.HasRotation {
+		return at.StartTransform.ApplyB(b).UnionB(at.EndTransform.ApplyB(b)), nil
+	}
+
+	// Return motion bounds accounting for animated rotation
+	bounds := Bounds3{}
+	for corner := 0; corner < 8; corner++ {
+		motionBound, err := at.boundPointMotion(b.Corner(corner))
+		if err != nil {
+			return Bounds3{}, err
+		}
+
+		bounds = bounds.UnionB(motionBound)
+	}
+
+	return bounds, nil
+}
+
+// BoundPointMotion see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/transform.cpp#L1226
+func (at AnimatedTransform) boundPointMotion(p Point3) (Bounds3, error) {
+	bounds := NewBounds3(at.StartTransform.ApplyP(p), at.EndTransform.ApplyP(p))
+	cosTheta := at.R[0].Dot(at.R[1])
+	theta := math.Acos(Clamp(cosTheta, -1, 1))
+
+	for c := 0; c < 3; c++ {
+		// Find any motion derivative zeros for the component c
+		zeros := [4]float64{}
+		nZeros := 0
+		intervalFindZeros(at.C1[c].Eval(p), at.C2[c].Eval(p), at.C3[c].Eval(p), at.C4[c].Eval(p), at.C5[c].Eval(p), theta, NewInterval(0.0, 1.0), &zeros, &nZeros, 8)
+
+		// Expand bounding box for any motion derivative zeros found
+		for i := 0; i < nZeros; i++ {
+			pz, err := at.ApplyP(Lerp(zeros[i], at.startTime, at.endTime), p)
+			if err != nil {
+				return Bounds3{}, err
+			}
+
+			bounds = bounds.UnionP(pz)
+		}
+	}
+
+	return bounds, nil
+}
+
+// intervalFindZeros see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/transform.cpp#L354
+func intervalFindZeros(c1, c2, c3, c4, c5, theta float64, tInterval Interval, zeros *[4]float64, zeroCount *int, depth int) {
+	// Evaluate motion derivative in interval form, return if no zeros
+	span := NewIntervalSingle(c1).Add(
+		NewIntervalSingle(c2).Add(NewIntervalSingle(c3).Multiply(tInterval)).Multiply(Cos(NewIntervalSingle(2 * theta).Multiply(tInterval)))).Add(
+		NewIntervalSingle(c4).Add(NewIntervalSingle(c5).Multiply(tInterval).Multiply(Sin(NewIntervalSingle(2 * theta).Multiply(tInterval)))))
+
+	if span.Low > 0 || span.High < 0 || span.Low == span.High {
+		return
+	}
+
+	if depth > 0 {
+		// Split tInterval and check both resulting intervals
+		mid := (tInterval.Low + tInterval.High) * 0.5
+		intervalFindZeros(c1, c2, c3, c4, c5, theta, NewInterval(tInterval.Low, mid), zeros, zeroCount, depth-1)
+		intervalFindZeros(c1, c2, c3, c4, c5, theta, NewInterval(mid, tInterval.High), zeros, zeroCount, depth-1)
+	} else {
+		// Use Newton’s method to refine zero
+		tNewton := (tInterval.Low + tInterval.High) * 0.5
+		for i := 0; i < 4; i++ {
+			fNewton := c1 +
+				(c2+c3*tNewton)*math.Cos(2*theta*tNewton) +
+				(c4+c5*tNewton)*math.Sin(2*theta*tNewton)
+
+			fPrimeNewton :=
+				(c3+2*(c4+c5*tNewton)*theta)*
+					math.Cos(2*tNewton*theta) +
+					(c5-2*(c2+c3*tNewton)*theta)*
+						math.Sin(2*tNewton*theta)
+
+			if fNewton == 0 || fPrimeNewton == 0 {
+				break
+			}
+
+			tNewton = tNewton - fNewton/fPrimeNewton
+		}
+
+		if tNewton >= tInterval.Low-1e-3 && tNewton < tInterval.High+1e-3 {
+			zeros[*zeroCount] = tNewton
+			*zeroCount++
+		}
+	}
 }
 
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.cpp#L1103
