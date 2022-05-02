@@ -415,7 +415,7 @@ func BenchmarkTransform_ApplyN(b *testing.B) {
 	t := mymath.NewTransformTranslate(mymath.NewVector3(1, 2, 3))
 	n := mymath.NewNormal3(0, 1, 0)
 
-	var res mymath.Vector3
+	var res mymath.Normal3
 
 	b.ResetTimer()
 

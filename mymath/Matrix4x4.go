@@ -101,12 +101,13 @@ func (m Matrix4x4) MultiplyV(v Vector3) Vector3 {
 	return NewVector3(xv, yv, zv)
 }
 
-func (m Matrix4x4) MultiplyN(n Normal3) Vector3 {
+// MultiplyN see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/transform.h#L244
+func (m Matrix4x4) MultiplyN(n Normal3) Normal3 {
 	xv := float64(m.M[0][0])*n.X + float64(m.M[1][0])*n.Y + float64(m.M[2][0])*n.Z
 	yv := float64(m.M[0][1])*n.X + float64(m.M[1][1])*n.Y + float64(m.M[2][1])*n.Z
 	zv := float64(m.M[0][2])*n.X + float64(m.M[1][2])*n.Y + float64(m.M[2][2])*n.Z
 
-	return NewVector3(xv, yv, zv)
+	return NewNormal3(xv, yv, zv)
 }
 
 func (m Matrix4x4) IsIdentity() bool {

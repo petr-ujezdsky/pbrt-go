@@ -206,6 +206,41 @@ func (t Transform) ApplyPError(p Point3) (Point3, Vector3) {
 	return pt, pError
 }
 
+// Applies transformation to Point, also returns error vector
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L303
+func (t Transform) ApplyPPError(p Point3, pError Vector3) (Point3, Vector3) {
+	pt := t.M.MultiplyP(p)
+
+	xAbsSum := (Gamma3+1)*(math.Abs(float64(t.M.M[0][0]))*pError.X+
+		math.Abs(float64(t.M.M[0][1]))*pError.Y+
+		math.Abs(float64(t.M.M[0][2])*pError.Z)) +
+		Gamma3*(math.Abs(float64(t.M.M[0][0])*p.X)+
+			math.Abs(float64(t.M.M[0][1])*p.Y)+
+			math.Abs(float64(t.M.M[0][2])*p.Z)+
+			math.Abs(float64(t.M.M[0][3])))
+
+	yAbsSum := (Gamma3+1)*(math.Abs(float64(t.M.M[1][0]))*pError.X+
+		math.Abs(float64(t.M.M[1][1]))*pError.Y+
+		math.Abs(float64(t.M.M[1][2])*pError.Z)) +
+		Gamma3*(math.Abs(float64(t.M.M[1][0])*p.X)+
+			math.Abs(float64(t.M.M[1][1])*p.Y)+
+			math.Abs(float64(t.M.M[1][2])*p.Z)+
+			math.Abs(float64(t.M.M[1][3])))
+
+	zAbsSum := (Gamma3+1)*(math.Abs(float64(t.M.M[2][0]))*pError.X+
+		math.Abs(float64(t.M.M[2][1]))*pError.Y+
+		math.Abs(float64(t.M.M[2][2])*pError.Z)) +
+		Gamma3*(math.Abs(float64(t.M.M[2][0])*p.X)+
+			math.Abs(float64(t.M.M[2][1])*p.Y)+
+			math.Abs(float64(t.M.M[2][2])*p.Z)+
+			math.Abs(float64(t.M.M[2][3])))
+
+	absError := NewVector3(xAbsSum, yAbsSum, zAbsSum)
+
+	return pt, absError
+}
+
 // Applies transformation to Vector
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L236
@@ -216,7 +251,7 @@ func (t Transform) ApplyV(v Vector3) Vector3 {
 // Applies transformation to Normal
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L244
-func (t Transform) ApplyN(n Normal3) Vector3 {
+func (t Transform) ApplyN(n Normal3) Normal3 {
 	return t.M.MultiplyN(n)
 }
 
@@ -279,6 +314,47 @@ func (t1 Transform) ApplyT(t2 Transform) Transform {
 	return Transform{
 		t1.M.Multiply(t2.M),
 		t2.MInv.Multiply(t1.MInv)}
+}
+
+func (t1 Transform) ApplySI(si *SurfaceInteraction) *SurfaceInteraction {
+	// Transform p and pError in SurfaceInteraction
+	p, pError := t1.ApplyPPError(si.P, si.PError)
+
+	// Transform remaining members of SurfaceInteraction
+	return &SurfaceInteraction{
+		Interaction: NewInteraction(
+			p,
+			t1.ApplyN(si.N).Normalize(),
+			pError,
+			t1.ApplyV(si.Wo),
+			si.Time,
+			si.MediumInterface),
+		Uv:    si.Uv,
+		Dpdu:  t1.ApplyV(si.Dpdu),
+		Dpdv:  t1.ApplyV(si.Dpdv),
+		Dndu:  t1.ApplyN(si.Dndu),
+		Dndv:  t1.ApplyN(si.Dndv),
+		Shape: si.Shape,
+		shading: shading{
+			t1.ApplyN(si.shading.N).Normalize(),
+			t1.ApplyV(si.shading.Dpdu),
+			t1.ApplyV(si.shading.Dpdv),
+			t1.ApplyN(si.shading.Dndu),
+			t1.ApplyN(si.shading.Dndv),
+		},
+		// TODO in another chapter
+		//ret.dudx = si.dudx;
+		//ret.dvdx = si.dvdx;
+		//ret.dudy = si.dudy;
+		//ret.dvdy = si.dvdy;
+		//ret.dpdx = t(si.dpdx);
+		//ret.dpdy = t(si.dpdy);
+		//ret.bsdf = si.bsdf;
+		//ret.bssrdf = si.bssrdf;
+		//ret.primitive = si.primitive;
+		////    ret.n = Faceforward(ret.n, ret.shading.n);
+		//ret.shading.n = Faceforward(ret.shading.n, ret.n);
+	}
 }
 
 func (t Transform) Inverse() Transform {

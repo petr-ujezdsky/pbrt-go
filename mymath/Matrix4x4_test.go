@@ -380,7 +380,7 @@ func BenchmarkMatrix4x4_MultiplyN(b *testing.B) {
 
 	n := mymath.NewNormal3(0, 1, 0)
 
-	var res mymath.Vector3
+	var res mymath.Normal3
 
 	b.ResetTimer()
 

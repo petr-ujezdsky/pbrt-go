@@ -47,14 +47,14 @@ func (v Normal3) Negate() Normal3 {
 // 	return NewNormal3(math.Abs(v.X), math.Abs(v.Y), math.Abs(v.Z))
 // }
 
-// func (v Normal3) Normalize() Normal3 {
-// 	lengthInv := 1 / v.Length()
-// 	return v.Multiply(lengthInv)
-// }
+func (v Normal3) Normalize() Normal3 {
+	lengthInv := 1 / v.Length()
+	return v.Multiply(lengthInv)
+}
 
-// func (v Normal3) Dot(w Normal3) float64 {
-// 	return v.X*w.X + v.Y*w.Y + v.Z*w.Z
-// }
+func (v Normal3) Dot(w Normal3) float64 {
+	return v.X*w.X + v.Y*w.Y + v.Z*w.Z
+}
 
 // func (v Normal3) Cross(w Normal3) Normal3 {
 // 	// always use doubles here!
@@ -117,6 +117,14 @@ func (v Normal3) Get(component int) float64 {
 // 		v.Get(z))
 // }
 
-func (v Normal3) HasNaNs(x, y, z int) bool {
-	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z)
+func (v Normal3) FaceForward(w Normal3) Normal3 {
+	if v.Dot(w) < 0 {
+		return v.Negate()
+	}
+
+	return v
 }
+
+//func (v Normal3) HasNaNs(x, y, z int) bool {
+//	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z)
+//}
