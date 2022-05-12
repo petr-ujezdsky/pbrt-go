@@ -152,3 +152,85 @@ func (b Bounds3) BoundingSphere() BoundingSphere {
 
 	return NewBoundingSphere(center, radius)
 }
+
+// IntersectP see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/geometry.h#L1388
+func (b Bounds3) IntersectP(ray Ray) (bool, float64, float64) {
+	t0 := 0.0
+	t1 := ray.TMax
+
+	for i := 0; i < 3; i++ {
+		// Update interval for ith bounding box slab
+		invRayDir := 1.0 / ray.D.Get(i)
+		tNear := (b.PMin.Get(i) - ray.O.Get(i)) * invRayDir
+		tFar := (b.PMax.Get(i) - ray.O.Get(i)) * invRayDir
+
+		// Update parametric interval from slab intersection  values
+		if tNear > tFar {
+			tFar, tNear = tNear, tFar
+		}
+
+		// Update tFar to ensure robust ray–bounds intersection
+		tFar *= 1 + 2*Gamma3
+
+		// both ifs take NaN into account
+		if tNear > t0 {
+			t0 = tNear
+		}
+
+		if tFar < t1 {
+			t1 = tFar
+		}
+
+		if t0 > t1 {
+			return false, 0, 0
+		}
+	}
+
+	return true, t0, t1
+}
+
+// IntersectPPrecomputed see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/geometry.h#L1412
+func (b Bounds3) IntersectPPrecomputed(ray Ray, invDir Vector3, dirIsNeg [3]int) bool {
+	// Check for ray intersection against $x$ and $y$ slabs
+	tMin := (b.Get(dirIsNeg[0]).X - ray.O.X) * invDir.X
+	tMax := (b.Get(1-dirIsNeg[0]).X - ray.O.X) * invDir.X
+	tyMin := (b.Get(dirIsNeg[1]).Y - ray.O.Y) * invDir.Y
+	tyMax := (b.Get(1-dirIsNeg[1]).Y - ray.O.Y) * invDir.Y
+
+	// Update _tMax_ and _tyMax_ to ensure robust bounds intersection
+	tMax *= 1 + 2*Gamma3
+	tyMax *= 1 + 2*Gamma3
+
+	if tMin > tyMax || tyMin > tMax {
+		return false
+	}
+
+	if tyMin > tMin {
+		tMin = tyMin
+	}
+
+	if tyMax < tMax {
+		tMax = tyMax
+	}
+
+	// Check for ray intersection against $z$ slab
+	tzMin := (b.Get(dirIsNeg[2]).Z - ray.O.Z) * invDir.Z
+	tzMax := (b.Get(1-dirIsNeg[2]).Z - ray.O.Z) * invDir.Z
+
+	// Update _tzMax_ to ensure robust bounds intersection
+	tzMax *= 1 + 2*Gamma3
+
+	if tMin > tzMax || tzMin > tMax {
+		return false
+	}
+
+	if tzMin > tMin {
+		tMin = tzMin
+	}
+
+	if tzMax < tMax {
+		tMax = tzMax
+	}
+
+	return (tMin < ray.TMax) && (tMax > 0)
+}
