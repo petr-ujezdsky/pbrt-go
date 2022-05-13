@@ -1,15 +1,11 @@
 package mymath
 
-import (
-	"pbrt-go/shape"
-)
-
 type SurfaceInteraction struct {
 	Interaction
 	Uv         Point2
 	Dpdu, Dpdv Vector3
 	Dndu, Dndv Normal3
-	Shape      *shape.Shape
+	Shape      *Shape
 	shading    shading
 }
 
@@ -19,7 +15,7 @@ type shading struct {
 	Dndu, Dndv Normal3
 }
 
-func NewSurfaceInteraction(p Point3, pError Vector3, uv Point2, wo Vector3, dpdu, dpdv Vector3, dndu, dndv Normal3, time float64, shape *shape.Shape) SurfaceInteraction {
+func NewSurfaceInteraction(p Point3, pError Vector3, uv Point2, wo Vector3, dpdu, dpdv Vector3, dndu, dndv Normal3, time float64, shape *Shape) SurfaceInteraction {
 	n := NewNormal3V(dpdu.Cross(dpdv).Normalize())
 
 	// Adjust normal based on orientation and handedness
