@@ -22,3 +22,7 @@ func TestMyMath_Clamp(t *testing.T) {
 	assert.Equal(t, 1.0, mymath.Clamp(1.0, 0.0, 1.0))
 	assert.Equal(t, 1.0, mymath.Clamp(3.0, 0.0, 1.0))
 }
+
+func TestMyMath_Radians(t *testing.T) {
+	assert.Equal(t, 0.0, mymath.Radians(0))
+}

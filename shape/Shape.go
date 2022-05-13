@@ -36,8 +36,8 @@ type IShape interface {
 	Areaer
 }
 
-func NewShape(objectToWorld, worldToObject *mymath.Transform, reverseOrientation bool) *Shape {
-	return &Shape{
+func NewShape(objectToWorld, worldToObject *mymath.Transform, reverseOrientation bool) Shape {
+	return Shape{
 		objectToWorld,
 		worldToObject,
 		reverseOrientation,

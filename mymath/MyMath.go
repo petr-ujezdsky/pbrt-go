@@ -26,6 +26,14 @@ func Clamp(val, low, high float64) float64 {
 	return val
 }
 
+func Radians(deg float64) float64 {
+	return (math.Pi / 180) * deg
+}
+
+func Degrees(rad float64) float64 {
+	return (180 / math.Pi) * rad
+}
+
 func gamma(n int) float64 {
 	ne := float64(n) * epsilon
 	return ne / (1 - ne)
