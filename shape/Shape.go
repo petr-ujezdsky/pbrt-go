@@ -16,6 +16,10 @@ type WorldBounder interface {
 	WorldBound(ob ObjectBounder) mymath.Bounds3
 }
 
+type Intersecter interface {
+	Intersect(ray mymath.Ray, testAlphaTexture bool) (bool, float64, mymath.SurfaceInteraction)
+}
+
 func NewShape(objectToWorld, worldToObject *mymath.Transform, reverseOrientation bool) *Shape {
 	return &Shape{
 		objectToWorld,
@@ -27,4 +31,9 @@ func NewShape(objectToWorld, worldToObject *mymath.Transform, reverseOrientation
 
 func (s Shape) WorldBound(ob ObjectBounder) mymath.Bounds3 {
 	return s.ObjectToWorld.ApplyB(ob.ObjectBound())
+}
+
+func (s Shape) IntersectP(i Intersecter, ray mymath.Ray, testAlphaTexture bool) bool {
+	intersects, _, _ := i.Intersect(ray, testAlphaTexture)
+	return intersects
 }
