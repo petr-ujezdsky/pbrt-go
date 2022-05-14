@@ -38,3 +38,58 @@ func gamma(n int) float64 {
 	ne := float64(n) * epsilon
 	return ne / (1 - ne)
 }
+
+// NextFloatUp
+//
+// see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/pbrt.h#L241
+func NextFloatUp(v float64) float64 {
+	// Handle infinity and negative zero for _NextFloatDown()_
+	if math.IsInf(v, 0) && v > 0 {
+		return v
+	}
+
+	if v == -0.0 {
+		v = 0.0
+	}
+
+	// Advance _v_ to next higher float
+	ui := math.Float64bits(v)
+
+	if v >= 0 {
+		ui++
+	} else {
+		ui--
+	}
+
+	return math.Float64frombits(ui)
+}
+
+// NextFloatDown
+//
+// see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/pbrt.h#L255
+func NextFloatDown(v float64) float64 {
+	// Handle infinity and positive zero for _NextFloatDown()_
+	if math.IsInf(v, 0) && v < 0 {
+		return v
+	}
+
+	if v == 0.0 {
+		v = -0.0
+	}
+
+	ui := math.Float64bits(v)
+
+	if v > 0 {
+		ui--
+	} else {
+		ui++
+	}
+
+	return math.Float64frombits(ui)
+}
+
+func CheckLE(v1, v2 float64) {
+	if v1 > v2 {
+		panic("Error")
+	}
+}
