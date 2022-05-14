@@ -241,11 +241,35 @@ func (t Transform) ApplyPPError(p Point3, pError Vector3) (Point3, Vector3) {
 	return pt, absError
 }
 
-// Applies transformation to Vector
+// ApplyV applies transformation to Vector
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L236
 func (t Transform) ApplyV(v Vector3) Vector3 {
 	return t.M.MultiplyV(v)
+}
+
+// ApplyVError applies transformation to Vector, also returns error vector
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L337
+func (t Transform) ApplyVError(v Vector3) (Vector3, Vector3) {
+	vt := t.M.MultiplyV(v)
+
+	// Compute absolute error for transformed vector
+	xAbsSum := math.Abs(float64(t.M.M[0][0])*v.X) +
+		math.Abs(float64(t.M.M[0][1])*v.Y) +
+		math.Abs(float64(t.M.M[0][2])*v.Z)
+
+	yAbsSum := math.Abs(float64(t.M.M[1][0])*v.X) +
+		math.Abs(float64(t.M.M[1][1])*v.Y) +
+		math.Abs(float64(t.M.M[1][2])*v.Z)
+
+	zAbsSum := math.Abs(float64(t.M.M[2][0])*v.X) +
+		math.Abs(float64(t.M.M[2][1])*v.Y) +
+		math.Abs(float64(t.M.M[2][2])*v.Z)
+
+	vError := NewVector3(xAbsSum, yAbsSum, zAbsSum).Multiply(Gamma3)
+
+	return vt, vError
 }
 
 // Applies transformation to Normal
@@ -272,6 +296,25 @@ func (t Transform) ApplyR(r Ray) Ray {
 	}
 
 	return NewRay(o, d, tMax, r.Time, r.Medium)
+}
+
+// ApplyRError applies transformation to Ray, also returns error vector
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/core/transform.h#L382
+func (t Transform) ApplyRError(r Ray) (Ray, Vector3, Vector3) {
+	o, oError := t.ApplyPError(r.O)
+	d, dError := t.ApplyVError(r.D)
+
+	tMax := r.TMax
+	lengthSq := d.LengthSq()
+
+	if lengthSq > 0 {
+		dt := d.Abs().Dot(oError) / lengthSq
+		o = o.AddV(d.Multiply(dt))
+		//        tMax -= dt;
+	}
+
+	return NewRay(o, d, tMax, r.Time, r.Medium), oError, dError
 }
 
 // Applies transformation to RayDifferential
