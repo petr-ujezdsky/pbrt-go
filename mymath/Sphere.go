@@ -16,8 +16,8 @@ func NewSphere(radius, zMin, zMax, phiMax float64, objectToWorld, worldToObject 
 	return &Sphere{
 		NewShape(objectToWorld, worldToObject, reverseOrientation),
 		radius,
-		zMin,
-		zMax,
+		Clamp(math.Min(zMin, zMax), -radius, radius),
+		Clamp(math.Max(zMin, zMax), -radius, radius),
 		math.Acos(Clamp(zMin/radius, -1, 1)),
 		math.Acos(Clamp(zMax/radius, -1, 1)),
 		Radians(Clamp(phiMax, 0, 360)),
