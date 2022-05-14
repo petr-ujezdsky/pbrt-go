@@ -23,3 +23,9 @@ func NewSphere(radius, zMin, zMax, phiMax float64, objectToWorld, worldToObject 
 		Radians(Clamp(phiMax, 0, 360)),
 	}
 }
+
+func (s Sphere) ObjectBound() Bounds3 {
+	return NewBounds3(
+		NewPoint3(-s.Radius, -s.Radius, s.ZMin),
+		NewPoint3(s.Radius, s.Radius, s.ZMax))
+}
