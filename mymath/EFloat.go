@@ -1,12 +1,13 @@
 package mymath
 
+import "C"
 import "math"
 
 // EFloat
 //
 // see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h
 type EFloat struct {
-	v, low, high float64
+	V, Low, High float64
 }
 
 func NewEFloat(v float64) EFloat {
@@ -41,9 +42,9 @@ func NewEFloatErr(v, err float64) EFloat {
 // see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h#L76
 func (ef EFloat) Add(ef2 EFloat) EFloat {
 	r := EFloat{
-		ef.v + ef2.v,
-		NextFloatDown(ef.low + ef2.low),
-		NextFloatUp(ef.high + ef2.high),
+		ef.V + ef2.V,
+		NextFloatDown(ef.Low + ef2.Low),
+		NextFloatUp(ef.High + ef2.High),
 	}
 
 	r.check()
@@ -56,9 +57,9 @@ func (ef EFloat) Add(ef2 EFloat) EFloat {
 // see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h#L101
 func (ef EFloat) Subtract(ef2 EFloat) EFloat {
 	r := EFloat{
-		ef.v - ef2.v,
-		NextFloatDown(ef.low - ef2.high),
-		NextFloatUp(ef.high - ef2.low),
+		ef.V - ef2.V,
+		NextFloatDown(ef.Low - ef2.High),
+		NextFloatUp(ef.High - ef2.Low),
 	}
 
 	r.check()
@@ -71,12 +72,12 @@ func (ef EFloat) Subtract(ef2 EFloat) EFloat {
 // see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h#L112
 func (ef EFloat) Multiply(ef2 EFloat) EFloat {
 	prod := [4]float64{
-		ef.low * ef2.low, ef.high * ef2.low,
-		ef.low * ef2.high, ef.high * ef2.high,
+		ef.Low * ef2.Low, ef.High * ef2.Low,
+		ef.Low * ef2.High, ef.High * ef2.High,
 	}
 
 	r := EFloat{
-		ef.v * ef2.v,
+		ef.V * ef2.V,
 		NextFloatDown(
 			math.Min(math.Min(prod[0], prod[1]), math.Min(prod[2], prod[3]))),
 		NextFloatUp(
@@ -94,22 +95,22 @@ func (ef EFloat) Multiply(ef2 EFloat) EFloat {
 func (ef EFloat) Divide(ef2 EFloat) EFloat {
 	var r EFloat
 
-	if ef2.low < 0 && ef2.high > 0 {
+	if ef2.Low < 0 && ef2.High > 0 {
 		// Bah. The interval we're dividing by straddles zero, so just
 		// return an interval of everything.
 		r = EFloat{
-			ef.v / ef2.v,
+			ef.V / ef2.V,
 			math.Inf(-1),
 			math.Inf(1),
 		}
 	} else {
 		div := [4]float64{
-			ef.low / ef2.low, ef.high / ef2.low,
-			ef.low / ef2.high, ef.high / ef2.high,
+			ef.Low / ef2.Low, ef.High / ef2.Low,
+			ef.Low / ef2.High, ef.High / ef2.High,
 		}
 
 		r = EFloat{
-			ef.v / ef2.v,
+			ef.V / ef2.V,
 			NextFloatDown(
 				math.Min(math.Min(div[0], div[1]), math.Min(div[2], div[3]))),
 			NextFloatUp(
@@ -123,23 +124,56 @@ func (ef EFloat) Divide(ef2 EFloat) EFloat {
 }
 
 func (ef EFloat) Float() float64 {
-	return ef.v
+	return ef.V
 }
 
 func (ef EFloat) Double() float64 {
-	return ef.v
+	return ef.V
 }
 
 // GetAbsoluteError
 //
 // see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h#L91
 func (ef EFloat) GetAbsoluteError() float64 {
-	return NextFloatUp(math.Max(math.Abs(ef.high-ef.v), math.Abs(ef.v-ef.low)))
+	return NextFloatUp(math.Max(math.Abs(ef.High-ef.V), math.Abs(ef.V-ef.Low)))
 }
 
 func (ef EFloat) check() {
-	if !math.IsInf(ef.low, 0) && !math.IsNaN(ef.low) && !math.IsInf(ef.high, 0) &&
-		!math.IsNaN(ef.high) {
-		CheckLE(ef.low, ef.high)
+	if !math.IsInf(ef.Low, 0) && !math.IsNaN(ef.Low) && !math.IsInf(ef.High, 0) &&
+		!math.IsNaN(ef.High) {
+		CheckLE(ef.Low, ef.High)
 	}
+}
+
+// Quadratic solves quadratic equation
+//
+// see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/efloat.h#L268
+func Quadratic(a, b, c EFloat) (bool, EFloat, EFloat) {
+	// Find quadratic discriminant
+	discrim := b.V*b.V - 4.*a.V*c.V
+
+	if discrim < 0.0 {
+		return false, EFloat{}, EFloat{}
+	}
+
+	rootDiscrim := math.Sqrt(discrim)
+
+	floatRootDiscrim := NewEFloatErr(rootDiscrim, epsilon*rootDiscrim)
+
+	// Compute quadratic _t_ values
+	var q EFloat
+	if b.V < 0.0 {
+		q = NewEFloat(-0.5).Multiply(b.Subtract(floatRootDiscrim))
+	} else {
+		q = NewEFloat(-0.5).Multiply(b.Add(floatRootDiscrim))
+	}
+
+	t0 := q.Divide(a)
+	t1 := c.Divide(q)
+
+	if t0.V > t1.V {
+		t0, t1 = t1, t0
+	}
+
+	return true, t0, t1
 }

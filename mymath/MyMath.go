@@ -5,6 +5,7 @@ import "math"
 var epsilon = math.Nextafter(1, 2) - 1
 
 var Gamma3 = gamma(3)
+var Gamma5 = gamma(5)
 
 // Lerp returns value interpolated between v1 and v2 using parameter t.
 func Lerp(t, v1, v2 float64) float64 {

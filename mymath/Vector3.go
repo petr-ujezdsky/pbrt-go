@@ -12,6 +12,10 @@ func NewVector3(x, y, z float64) Vector3 {
 	return Vector3{x, y, z}
 }
 
+func NewVector3P(p Point3) Vector3 {
+	return Vector3{p.X, p.Y, p.Z}
+}
+
 func (v Vector3) LengthSq() float64 {
 	return v.X*v.X + v.Y*v.Y + v.Z*v.Z
 }
