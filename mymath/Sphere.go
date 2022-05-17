@@ -33,7 +33,7 @@ func (s Sphere) ObjectBound() Bounds3 {
 // Intersect finds ray-shape collision point and its metadata
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/shapes/sphere.cpp#L49
-func (s Sphere) Intersect(r Ray, testAlphaTexture bool) (bool, float64, *SurfaceInteraction) {
+func (s Sphere) Intersect(r Ray, _ bool) (bool, float64, *SurfaceInteraction) {
 	// Transform Ray to object space
 	ray, oErr, dErr := s.WorldToObject.ApplyRError(r)
 
@@ -178,7 +178,7 @@ func (s Sphere) Intersect(r Ray, testAlphaTexture bool) (bool, float64, *Surface
 // IntersectP finds if ray collides with this shape
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/shapes/sphere.cpp#L158
-func (s Sphere) IntersectP(r Ray, testAlphaTexture bool) bool {
+func (s Sphere) IntersectP(i Intersecter, r Ray, _ bool) bool {
 	// Transform Ray to object space
 	ray, oErr, dErr := s.WorldToObject.ApplyRError(r)
 

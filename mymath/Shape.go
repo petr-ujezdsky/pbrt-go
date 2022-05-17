@@ -15,7 +15,7 @@ type WorldBounder interface {
 }
 
 type Intersecter interface {
-	Intersect(ray Ray, testAlphaTexture bool) (bool, float64, SurfaceInteraction)
+	Intersect(ray Ray, testAlphaTexture bool) (bool, float64, *SurfaceInteraction)
 }
 
 type IntersectPer interface {
