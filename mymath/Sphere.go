@@ -268,3 +268,7 @@ func (s Sphere) IntersectP(i Intersecter, r Ray, _ bool) bool {
 
 	return true
 }
+
+func (s Sphere) Area() float64 {
+	return s.PhiMax * s.Radius * (s.ZMax - s.ZMin)
+}
