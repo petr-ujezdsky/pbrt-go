@@ -99,7 +99,6 @@ func (s Sphere) Intersect(r Ray, testAlphaTexture bool) (bool, float64, *Surface
 		}
 		tShapeHit = t1
 
-		// TODO pujezdsky this is the same as 20 rows above??
 		// Compute sphere hit position and phi
 		pHit := ray.Apply(tShapeHit.V)
 
@@ -245,7 +244,6 @@ func (s Sphere) IntersectP(r Ray, testAlphaTexture bool) bool {
 		}
 		tShapeHit = t1
 
-		// TODO pujezdsky this is the same as 20 rows above??
 		// Compute sphere hit position and phi
 		pHit := ray.Apply(tShapeHit.V)
 
