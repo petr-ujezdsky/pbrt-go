@@ -30,6 +30,8 @@ func (s Sphere) ObjectBound() Bounds3 {
 		NewPoint3(s.Radius, s.Radius, s.ZMax))
 }
 
+// Intersect finds ray-shape collision point and its metadata
+//
 // see https://github.com/mmp/pbrt-v3/blob/master/src/shapes/sphere.cpp#L49
 func (s Sphere) Intersect(r Ray, testAlphaTexture bool) (bool, float64, *SurfaceInteraction) {
 	// Transform Ray to object space
@@ -172,4 +174,99 @@ func (s Sphere) Intersect(r Ray, testAlphaTexture bool) (bool, float64, *Surface
 
 	// Update _tHit_ for quadric intersection
 	return true, tShapeHit.V, isect
+}
+
+// IntersectP finds if ray collides with this shape
+//
+// see https://github.com/mmp/pbrt-v3/blob/master/src/shapes/sphere.cpp#L158
+func (s Sphere) IntersectP(r Ray, testAlphaTexture bool) bool {
+	// Transform Ray to object space
+	ray, oErr, dErr := s.WorldToObject.ApplyRError(r)
+
+	// Compute quadratic sphere coefficients
+
+	// Initialize EFloat ray coordinate values
+	ox := NewEFloatErr(ray.O.X, oErr.X)
+	oy := NewEFloatErr(ray.O.Y, oErr.Y)
+	oz := NewEFloatErr(ray.O.Z, oErr.Z)
+
+	dx := NewEFloatErr(ray.D.X, dErr.X)
+	dy := NewEFloatErr(ray.D.Y, dErr.Y)
+	dz := NewEFloatErr(ray.D.Z, dErr.Z)
+
+	a := dx.Multiply(dx).Add(dy.Multiply(dy)).Add(dz.Multiply(dz))
+	b := NewEFloat(2).Multiply(dx.Multiply(ox).Add(dy.Multiply(oy)).Add(dz.Multiply(oz)))
+	c := ox.Multiply(ox).Add(oy.Multiply(oy)).Add(oz.Multiply(oz)).Subtract(NewEFloat(s.Radius).Multiply(NewEFloat(s.Radius)))
+
+	// Solve quadratic equation for t values
+	ok, t0, t1 := Quadratic(a, b, c)
+
+	if !ok {
+		return false
+	}
+
+	// Check quadratic shape t0 and t1 for nearest intersection
+	if t0.High > ray.TMax || t1.Low <= 0 {
+		return false
+	}
+
+	tShapeHit := t0
+	if tShapeHit.Low <= 0 {
+		tShapeHit = t1
+		if tShapeHit.High > ray.TMax {
+			return false
+		}
+	}
+
+	// Compute sphere hit position and phi
+	pHit := ray.Apply(tShapeHit.V)
+
+	// Refine sphere intersection point
+	pHit = pHit.Multiply(s.Radius / pHit.Distance(NewPoint3(0, 0, 0)))
+
+	if pHit.X == 0 && pHit.Y == 0 {
+		pHit.X = 1e-5 * s.Radius
+	}
+
+	phi := math.Atan2(pHit.Y, pHit.X)
+	if phi < 0 {
+		phi += 2 * math.Pi
+	}
+
+	// Test sphere intersection against clipping parameters
+	if (s.ZMin > -s.Radius && pHit.Z < s.ZMin) ||
+		(s.ZMax < s.Radius && pHit.Z > s.ZMax) || phi > s.PhiMax {
+		if tShapeHit == t1 {
+			return false
+		}
+
+		if t1.High > ray.TMax {
+			return false
+		}
+		tShapeHit = t1
+
+		// TODO pujezdsky this is the same as 20 rows above??
+		// Compute sphere hit position and phi
+		pHit := ray.Apply(tShapeHit.V)
+
+		// Refine sphere intersection point
+		pHit = pHit.Multiply(s.Radius / pHit.Distance(NewPoint3(0, 0, 0)))
+
+		if pHit.X == 0 && pHit.Y == 0 {
+			pHit.X = 1e-5 * s.Radius
+		}
+
+		phi := math.Atan2(pHit.Y, pHit.X)
+		if phi < 0 {
+			phi += 2 * math.Pi
+		}
+
+		// Compute sphere hit position and phi
+		if (s.ZMin > -s.Radius && pHit.Z < s.ZMin) ||
+			(s.ZMax < s.Radius && pHit.Z > s.ZMax) || phi > s.PhiMax {
+			return false
+		}
+	}
+
+	return true
 }
