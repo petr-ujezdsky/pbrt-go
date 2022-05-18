@@ -40,6 +40,12 @@ func InDeltaVector3(t *testing.T, expected, actual mymath.Vector3, msgAndArgs ..
 	assert.InDelta(t, expected.Z, actual.Z, equalDelta, msgAndArgs...)
 }
 
+func InDeltaNormal3(t *testing.T, expected, actual mymath.Normal3, msgAndArgs ...interface{}) {
+	assert.InDelta(t, expected.X, actual.X, equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.Y, actual.Y, equalDelta, msgAndArgs...)
+	assert.InDelta(t, expected.Z, actual.Z, equalDelta, msgAndArgs...)
+}
+
 func InDeltaQuaternion(t *testing.T, expected, actual mymath.Quaternion, msgAndArgs ...interface{}) {
 	assert.InDelta(t, expected.V.X, actual.V.X, equalDelta, msgAndArgs...)
 	assert.InDelta(t, expected.V.Y, actual.V.Y, equalDelta, msgAndArgs...)
