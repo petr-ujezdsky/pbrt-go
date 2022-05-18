@@ -164,7 +164,7 @@ func (cyl Cylinder) Intersect(r Ray, _ bool) (bool, float64, *SurfaceInteraction
 // IntersectP finds if ray collides with this shape
 //
 // see https://github.com/mmp/pbrt-v3/blob/master/src/shapes/cylinder.cpp#L146
-func (cyl Cylinder) IntersectP(i Intersecter, r Ray, _ bool) bool {
+func (cyl Cylinder) IntersectP(_ Intersecter, r Ray, _ bool) bool {
 	// Transform Ray to object space
 	ray, oErr, dErr := cyl.WorldToObject.ApplyRError(r)
 
