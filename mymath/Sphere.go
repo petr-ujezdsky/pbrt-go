@@ -100,7 +100,7 @@ func (s Sphere) Intersect(r Ray, _ bool) (bool, float64, *SurfaceInteraction) {
 		tShapeHit = t1
 
 		// Compute sphere hit position and phi
-		pHit := ray.Apply(tShapeHit.V)
+		pHit = ray.Apply(tShapeHit.V)
 
 		// Refine sphere intersection point
 		pHit = pHit.Multiply(s.Radius / pHit.Distance(NewPoint3(0, 0, 0)))
@@ -109,7 +109,7 @@ func (s Sphere) Intersect(r Ray, _ bool) (bool, float64, *SurfaceInteraction) {
 			pHit.X = 1e-5 * s.Radius
 		}
 
-		phi := math.Atan2(pHit.Y, pHit.X)
+		phi = math.Atan2(pHit.Y, pHit.X)
 		if phi < 0 {
 			phi += 2 * math.Pi
 		}
@@ -245,7 +245,7 @@ func (s Sphere) IntersectP(i Intersecter, r Ray, _ bool) bool {
 		tShapeHit = t1
 
 		// Compute sphere hit position and phi
-		pHit := ray.Apply(tShapeHit.V)
+		pHit = ray.Apply(tShapeHit.V)
 
 		// Refine sphere intersection point
 		pHit = pHit.Multiply(s.Radius / pHit.Distance(NewPoint3(0, 0, 0)))
@@ -254,7 +254,7 @@ func (s Sphere) IntersectP(i Intersecter, r Ray, _ bool) bool {
 			pHit.X = 1e-5 * s.Radius
 		}
 
-		phi := math.Atan2(pHit.Y, pHit.X)
+		phi = math.Atan2(pHit.Y, pHit.X)
 		if phi < 0 {
 			phi += 2 * math.Pi
 		}
