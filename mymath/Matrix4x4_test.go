@@ -166,7 +166,7 @@ func TestMatrix4x4_MultiplyN(t *testing.T) {
 
 	res := m.MultiplyN(n)
 
-	expected := mymath.NewVector3(7, 3, 5)
+	expected := mymath.NewNormal3(7, 3, 5)
 
 	assert.Equal(t, expected, res)
 }
