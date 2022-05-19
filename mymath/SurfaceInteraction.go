@@ -1,5 +1,8 @@
 package mymath
 
+// SurfaceInteraction describes local metadata for ray-shape collision point
+//
+// see https://github.com/mmp/pbrt-v3/blob/aaa552a4b9cbf9dccb71450f47b268e0ed6370e2/src/core/interaction.cpp
 type SurfaceInteraction struct {
 	Interaction
 	Uv         Point2
