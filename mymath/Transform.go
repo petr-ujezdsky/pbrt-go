@@ -292,7 +292,7 @@ func (t Transform) ApplyR(r Ray) Ray {
 	if lengthSquared > 0 {
 		dt := d.Abs().Dot(oError) / lengthSquared
 		o = o.AddV(d.Multiply(dt))
-		tMax -= dt
+		//tMax -= dt
 	}
 
 	return NewRay(o, d, tMax, r.Time, r.Medium)
@@ -311,7 +311,7 @@ func (t Transform) ApplyRError(r Ray) (Ray, Vector3, Vector3) {
 	if lengthSq > 0 {
 		dt := d.Abs().Dot(oError) / lengthSq
 		o = o.AddV(d.Multiply(dt))
-		//        tMax -= dt;
+		//tMax -= dt;
 	}
 
 	return NewRay(o, d, tMax, r.Time, r.Medium), oError, dError
